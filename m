@@ -2,63 +2,63 @@ Return-Path: <sjolley.yp.pm@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF962D2C562
-	for <webhook@archiver.kernel.org>; Tue, 22 Oct 2024 14:54:25 +0000 (UTC)
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
- by mx.groups.io with SMTP id smtpd.web11.20313.1729608863713630542
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7416D3A665
+	for <webhook@archiver.kernel.org>; Tue, 29 Oct 2024 14:44:22 +0000 (UTC)
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+ by mx.groups.io with SMTP id smtpd.web10.21515.1730213053436944769
  for <yocto-status@lists.yoctoproject.org>;
- Tue, 22 Oct 2024 07:54:23 -0700
+ Tue, 29 Oct 2024 07:44:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20230601 header.b=mT1nutaS;
- spf=pass (domain: gmail.com, ip: 209.85.216.51, mailfrom: sjolley.yp.pm@gmail.com)
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2e2e87153a3so3869962a91.3;
-        Tue, 22 Oct 2024 07:54:23 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=PMZhbSr8;
+ spf=pass (domain: gmail.com, ip: 209.85.214.176, mailfrom: sjolley.yp.pm@gmail.com)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20c8c50fdd9so42529005ad.0;
+        Tue, 29 Oct 2024 07:44:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729608863; x=1730213663; darn=lists.yoctoproject.org;
+        d=gmail.com; s=20230601; t=1730213052; x=1730817852; darn=lists.yoctoproject.org;
         h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=q2kGyZEAsEkiVaf7hCSiCO3ntb+bUzirSAjcqoq9fJA=;
-        b=mT1nutaSrIZrngwBx45HFBNlo3GS84LIoyOMEM8sr8THsULG5bs4gBJ9kKHHlLkT5m
-         UDOW9mkGFf6ihaq7uM7sNwAebfUUcrinEpvpRXdn81kaTwMHlTIA+XoeeXQ9hzsEaHzK
-         qnhhAL5dEyvF+KaK7lFIgI+a83TZAG+pBrddwvkmvvjCYCyY+mvBTXOvSTTu13+ZT2uw
-         tZ/4jRJvBbOhkyqI41wrqEiapol7/uj5W5u51tjv4rMk33El0t62zjVfKgbl+UBkp4hm
-         clkdeT8ddU1TAOMfEyPWtMDFtwVIGTVE3L7I8vgK84e/aa9naHleMvu0FQ8t1C0Yx7Pe
-         9oBg==
+        bh=sUBzWu2nxF96EMAv064r8qjWSvKgW7IWgKaRQGFROho=;
+        b=PMZhbSr8YZJi8Kqa5nQX2aw3LDD3/4AiMUe8lpcoBX28/wdLT2QnAU0mzLkeLx9QGB
+         0gX9wqKzrXNPNySSWrSfoGZ0OM/Q4g1KhmZ8j/ba1wVl4q1waFtpv+v+WtG7zlg/r8To
+         1WijbXOsQifZZQ/P4V2S2C+bQ8uFtsfe9cCYfKsTrPXNeNCc4gcIkS/LpH+c/RQ+RmOf
+         cve91DnxEr22yI0IFITAukZF8DwsBKsH+jIrxxEp6IbrtsUMsup6Q33lMDsldXO8J7Ca
+         Zr2ej68oxSM4qGgBa6+MSLxUJf4ZDGna6WM4XZoxXfswUx4HDQyJOu2/g/iSNWh+ZQeX
+         WzcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729608863; x=1730213663;
+        d=1e100.net; s=20230601; t=1730213052; x=1730817852;
         h=to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=q2kGyZEAsEkiVaf7hCSiCO3ntb+bUzirSAjcqoq9fJA=;
-        b=qHTCH7dVxhf0/ayXwGOQKTsFj2FpqT/omY5gi1Q3kJOoMhAhyEWMpTL/47RKOebJOX
-         GvRBZ7AqnpfDVO5jB36Uj7v0xdhts1MjO9QsJ4bcVSUTEsHxwvE8HAr/oKymB/3SFfCx
-         Dlekd6PHVJR4nZCIXgUw1zb3Q+/V9S3w5sPIKFGnBv9Tkk1kBcXEaHSOMNJGYIBWuV9y
-         kLA83SmpA4td6/+6BrcG/P5l2ANiopzeNu4yoxl/DQNj27uFoZrexcopoWCuDS7AtJXR
-         r6in0M+lnHM3cNpu9OrohNGDOXJa1Yb3v6el+pPSdc+1cYvH2YeIe8Z1zrZDgxr4CwNm
-         Mrkg==
-X-Forwarded-Encrypted: i=1; AJvYcCVykWWg6vqdBASDTEDJUGyGoHlb4rPJoL/f5Depy1mSABG3OZXGTX+5G2iODtDWGxJftnoW1jjc7xbeDE4=@lists.yoctoproject.org
-X-Gm-Message-State: AOJu0YxwwiE8A0mWMnr2NCOdCPQ/1Y8G5xCmpdKo7XxAKY0ddkUXYRDH
-	XzhxsP+b/2RK8VGMwom8ZTK0dGt94BXniDlZKUJOxSA3aRSQAjBJEeBuiTYp5q0Bwcq94t69TYp
-	e9NlxXxAVEgbGgdIvpn4X+tMNdgRdoizE
-X-Google-Smtp-Source: AGHT+IEdzleF3tQ/GaNo4lNUqOWV/PD5DgZl3yvlTFdw9ZP9Jiaaj3SUju8NyR6iz5JVCa7emtMoCsa0oz/je2c1rfc=
-X-Received: by 2002:a17:90b:4a8a:b0:2e2:e136:a931 with SMTP id
- 98e67ed59e1d1-2e5616c1e9bmr15084047a91.6.1729608862665; Tue, 22 Oct 2024
- 07:54:22 -0700 (PDT)
+        bh=sUBzWu2nxF96EMAv064r8qjWSvKgW7IWgKaRQGFROho=;
+        b=VLEvcsmJqj4zQrPxaSPPcgcuJIQoXBvYuD+AM6w+gofwTISXO2m+D17TjloiCV9aTm
+         3KZdRDREx4lGIGATjnQyvNs/BJ4q7buiXyK/tGsuAcRIiffj8TqSnLJ6DxFw1xpR8caB
+         jMfOIuyAckEPxbLvYZLfHTSZN4EVDCkVU4G0CoF37OfvXlscY7P1WKWlWRSht7xCTmTz
+         b4jjoMsxlZaaxBhm7llPCmfe71m1C7shYBCmMtwVIVWDXdq8X21ODBZR5TLZ6BCT12a4
+         tlRbHPWQJ7ZnhCDVsxQzOLlndKCRqYtaX7FVd+8vywVkBNCLJpqbtXBVZ1+3CEivxbGj
+         WNgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVlHWwxOR+0ZDazu1Fl0mUXbEz6NWftxZuKvpji9xAZMjIbUG1b8w8Q1xKP06s0D9lQUal4hxSad4QT0TU=@lists.yoctoproject.org
+X-Gm-Message-State: AOJu0YyETLX/r0tlual1iADwGL3fbD9/G+TP5t9BIkE9+lcQzHKB8FG7
+	sjdz9SgySjf8v1cu+tEloj/480OrQYap6MSQ5YIQTueU4vvcanNqzoWuystGY24Gr4K6PRVgICu
+	Ble/IstKF0EFyDanFY0xq3DHVnNrCytYT
+X-Google-Smtp-Source: AGHT+IHhR4K4tTpyr90Zw3xJFW05ozDz892o0frFp2l9/pb+O5/aG1G93Bwk20SG+U0AH/GYs6rl4SpIm9ulksldQiA=
+X-Received: by 2002:a17:90b:507:b0:2d8:b043:9414 with SMTP id
+ 98e67ed59e1d1-2e9224d9dbemr3716818a91.18.1730213052307; Tue, 29 Oct 2024
+ 07:44:12 -0700 (PDT)
 MIME-Version: 1.0
 From: Stephen K Jolley <sjolley.yp.pm@gmail.com>
-Date: Tue, 22 Oct 2024 07:54:10 -0700
-Message-ID: <CAK5yBb9v8cYcr=vFqJmfxQz1eaLYcQAnjO6SD86bTMD1derzUg@mail.gmail.com>
-Subject: Yocto Project Status 22 Oct. 2024 (WW43)
+Date: Tue, 29 Oct 2024 07:43:59 -0700
+Message-ID: <CAK5yBb_drGT-XW7xCnJKm0jCzAZhP-_w27Adurk=jERse1er-Q@mail.gmail.com>
+Subject: Yocto Project Status 29 Oct. 2024 (WW44)
 To: Yocto-mailing-list <yocto@lists.yoctoproject.org>, 
 	",openembedded-core@lists.openembedded.org" <openembedded-core@lists.openembedded.org>, 
 	yocto-status@lists.yoctoproject.org
-Content-Type: multipart/alternative; boundary="000000000000dc1663062511f1df"
+Content-Type: multipart/alternative; boundary="0000000000005e60f506259e9eec"
 List-Id: <yocto-status.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <yocto-status@lists.yoctoproject.org>; Tue, 22 Oct 2024 14:54:25 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/yocto-status/message/32
+ <yocto-status@lists.yoctoproject.org>; Tue, 29 Oct 2024 14:44:22 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/yocto-status/message/33
 
---000000000000dc1663062511f1df
+--0000000000005e60f506259e9eec
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -70,11 +70,11 @@ Next Team Meetings:
 
    -
 
-   Bug Triage meeting Thursday Oct. 24th at 7:30 am PST (
+   Bug Triage meeting Thursday Oct. 31st at 7:30 am PST (
    https://zoom.us/j/454367603?pwd=3DZGxoa2ZXL3FkM3Y0bFd5aVpHVVZ6dz09)
    -
 
-   Weekly Project Engineering Sync Tuesday Oct. 22nd at 8 am PST (
+   Weekly Project Engineering Sync Tuesday Oct. 29th at 8 am PST (
    https://zoom.us/j/990892712?pwd=3DcHU1MjhoM2x6ck81bkcrYjRrcmJsUT09)
    <https://zoom.us/j/990892712>
    -
@@ -86,31 +86,45 @@ Key Status/Updates:
 
    -
 
-   YP 5.1 was released - Thanks to everyone who helped contribute to 5.1!
+   YP 4.0.22 was released
    -
 
-   YP 4.0.22 is due to release
+   The new autobuilder cluster (valkyrie) is up and running and all work is
+   being done there. The old cluster is being shut down.
    -
 
-   We are continuing with the autobuilder migration and the typhoon cluster
-   is being decommissioned. All builds are now happening on valkyrie (the n=
-ew
-   cluster).
+   The CDN and mirror tests are now working reliably and we are getting
+   green builds again. Huge thanks to Michael Halstead for the work being
+   done, mostly behind the scenes.
    -
 
-   There are still a lot of failures occurring on the autobuilder. Of the
-   remaining issues, we are making progress on many but work is still ongoi=
-ng.
+   Progress has been made on many of the blocking intermittent issues on
+   the new autobuilder but many rarer issues remain.
    -
 
-   In particular it was found the debian 11 5.10 kernel was problematic
-   with qemu and the 6.1 kernel appears more stable for our workloads. We w=
-ill
-   switch the debian 11 workers to the 6.1 backport kernel.
+   Rust tests on the MIPS architecture have been disabled as nobody is
+   using/supporting it.
    -
 
-   We plan to disable the rust tests for mips and ppc, we cannot find any
-   users of rust on these architectures.
+   Toaster test suite improvements have merged but more work really needs
+   to be done there to improve some of the test conditions.
+   -
+
+   We have a new command line tool to help with the SWAT, thanks to Mathieu
+   for putting that together. https://git.yoctoproject.org/swat-tools/
+   -
+
+   The UKI (Unified Kernel Images) series finally merged with tests, which
+   will help ensure the code keeps working in the future.
+   -
+
+   We=E2=80=99re seeing a pattern of people submitting patches to master wh=
+en
+   they=E2=80=99ve only tested them against older releases. In several case=
+s the issue
+   wasn=E2=80=99t even present there. Please don=E2=80=99t do this, it wast=
+es a lot of time.
+   If you see the issue against an older release, please make that clear.
    -
 
    For 5.2 it would be helpful to have rough development plans for areas of
@@ -226,27 +240,20 @@ Tracking Metrics:
 
    -
 
-   WDD 2776 (last week 2744) (
+   WDD 2756 (last week 2776) (
    https://wiki.yoctoproject.org/charts/combo.html)
    -
 
    OE-Core/Poky Patch Metrics
    -
 
-      Total patches found: 1078 (last week 1072)
+      Total patches found: 1063 (last week 1078)
       -
 
       Patches in the Pending State: 175 (16%) [last week 175 (16%)]
       -
 
       https://autobuilder.yocto.io/pub/non-release/patchmetrics/
-
-
-YP 5.1 Milestone Dates:
-
-   -
-
-   YP 5.1 is released.
 
 
 YP 5.2 Milestone Dates:
@@ -281,7 +288,7 @@ Upcoming dot releases:
 
    -
 
-   YP 4.0.22 is in review.
+   YP 4.0.22 was released.
    -
 
    YP 5.0.5 Build Date 2024-11-11
@@ -407,12 +414,12 @@ Thanks,
 <stephen.k.jolley@intel.com>jolley.yp.pm@gmail.com <jolley.yp.pm@gmail.com>=
 *
 
---000000000000dc1663062511f1df
+--0000000000005e60f506259e9eec
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><span id=3D"gmail-docs-internal-guid-dfb4cd3c-7fff-52cb-4a=
-38-9227207ddcbf"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;ma=
+<div dir=3D"ltr"><span id=3D"gmail-docs-internal-guid-d21029d6-7fff-541c-16=
+42-bcd91f4de888"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;ma=
 rgin-bottom:0pt"><span style=3D"font-size:11pt;font-family:Arial,sans-serif=
 ;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:normal;=
 font-variant-east-asian:normal;font-variant-alternates:normal;vertical-alig=
@@ -434,7 +441,7 @@ e"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0p=
 t" role=3D"presentation"><span style=3D"font-size:11pt;background-color:tra=
 nsparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-va=
 riant-alternates:normal;vertical-align:baseline">Bug Triage meeting Thursda=
-y Oct. 24th at 7:30 am PST (</span><a href=3D"https://zoom.us/j/454367603?p=
+y Oct. 31st at 7:30 am PST (</span><a href=3D"https://zoom.us/j/454367603?p=
 wd=3DZGxoa2ZXL3FkM3Y0bFd5aVpHVVZ6dz09" style=3D"text-decoration-line:none">=
 <span style=3D"font-size:11pt;background-color:transparent;font-variant-num=
 eric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;t=
@@ -450,7 +457,7 @@ ariant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D=
 resentation"><span style=3D"font-size:11pt;background-color:transparent;fon=
 t-variant-numeric:normal;font-variant-east-asian:normal;font-variant-altern=
 ates:normal;vertical-align:baseline">Weekly Project Engineering Sync Tuesda=
-y Oct. 22nd at 8 am PST (</span><a href=3D"https://zoom.us/j/990892712?pwd=
+y Oct. 29th at 8 am PST (</span><a href=3D"https://zoom.us/j/990892712?pwd=
 =3DcHU1MjhoM2x6ck81bkcrYjRrcmJsUT09" style=3D"text-decoration-line:none"><s=
 pan style=3D"font-size:11pt;background-color:transparent;font-variant-numer=
 ic:normal;font-variant-east-asian:normal;font-variant-alternates:normal;tex=
@@ -486,243 +493,7 @@ round-color:transparent;font-variant-numeric:normal;font-variant-east-asian=
 pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:=
 0pt" role=3D"presentation"><span style=3D"font-size:11pt;background-color:t=
 ransparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-=
-variant-alternates:normal;vertical-align:baseline">YP 5.1 was released - Th=
-anks to everyone who helped contribute to 5.1!</span></p></li><li dir=3D"lt=
-r" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-seri=
-f;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:normal=
-;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-ali=
-gn:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margi=
-n-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size=
-:11pt;background-color:transparent;font-variant-numeric:normal;font-variant=
--east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">=
-YP 4.0.22 is due to release</span></p></li><li dir=3D"ltr" style=3D"list-st=
-yle-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);=
-background-color:transparent;font-variant-numeric:normal;font-variant-east-=
-asian:normal;font-variant-alternates:normal;vertical-align:baseline;white-s=
-pace:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bo=
-ttom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background-co=
-lor:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;=
-font-variant-alternates:normal;vertical-align:baseline">We are continuing w=
-ith the autobuilder migration and the typhoon cluster is being decommission=
-ed. All builds are now happening on valkyrie (the new cluster).</span></p><=
-/li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-famil=
-y:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-varia=
-nt-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:no=
-rmal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-=
-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span s=
-tyle=3D"font-size:11pt;background-color:transparent;font-variant-numeric:no=
-rmal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical=
--align:baseline">There are still a lot of failures occurring on the autobui=
-lder. Of the remaining issues, we are making progress on many but work is s=
-till ongoing.</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;=
-font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-col=
-or:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;f=
-ont-variant-alternates:normal;vertical-align:baseline;white-space:pre"><p d=
-ir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=
-=3D"presentation"><span style=3D"font-size:11pt;background-color:transparen=
-t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
-lternates:normal;vertical-align:baseline">In particular it was found the de=
-bian 11 5.10 kernel was problematic with qemu and the 6.1 kernel appears mo=
-re stable for our workloads. We will switch the debian 11 workers to the 6.=
-1 backport kernel.</span></p></li><li dir=3D"ltr" style=3D"list-style-type:=
-disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);backgroun=
-d-color:transparent;font-variant-numeric:normal;font-variant-east-asian:nor=
-mal;font-variant-alternates:normal;vertical-align:baseline;white-space:pre"=
-><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt"=
- role=3D"presentation"><span style=3D"font-size:11pt;background-color:trans=
-parent;font-variant-numeric:normal;font-variant-east-asian:normal;font-vari=
-ant-alternates:normal;vertical-align:baseline">We plan to disable the rust =
-tests for mips and ppc, we cannot find any users of rust on these architect=
-ures.</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-siz=
-e:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:trans=
-parent;font-variant-numeric:normal;font-variant-east-asian:normal;font-vari=
-ant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"lt=
-r" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"pres=
-entation"><span style=3D"font-size:11pt;background-color:transparent;font-v=
-ariant-numeric:normal;font-variant-east-asian:normal;font-variant-alternate=
-s:normal;vertical-align:baseline">For 5.2 it would be helpful to have rough=
- development plans for areas of the project if anyone is able to help docum=
-ent a rough roadmap/plan for them. The following areas are known to be bein=
-g or need working on:</span></p></li><ul style=3D"margin-top:0px;margin-bot=
-tom:0px"><li dir=3D"ltr" style=3D"list-style-type:circle;font-size:11pt;fon=
-t-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;fon=
-t-variant-numeric:normal;font-variant-east-asian:normal;font-variant-altern=
-ates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=
-=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation=
-"><span style=3D"font-size:11pt;background-color:transparent;font-variant-n=
-umeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal=
-;vertical-align:baseline">Autobuilder</span></p></li><li dir=3D"ltr" style=
-=3D"list-style-type:circle;font-size:11pt;font-family:Arial,sans-serif;colo=
-r:rgb(0,0,0);background-color:transparent;font-variant-numeric:normal;font-=
-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:bas=
-eline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:=
-0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;=
-background-color:transparent;font-variant-numeric:normal;font-variant-east-=
-asian:normal;font-variant-alternates:normal;vertical-align:baseline">Binary=
- Distro</span></p></li><li dir=3D"ltr" style=3D"list-style-type:circle;font=
--size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:t=
-ransparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-=
-variant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=
-=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=
-=3D"presentation"><span style=3D"font-size:11pt;background-color:transparen=
-t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
-lternates:normal;vertical-align:baseline">Bitbake config fragments</span></=
-p></li><li dir=3D"ltr" style=3D"list-style-type:circle;font-size:11pt;font-=
-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-=
-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternat=
-es:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"=
-line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><s=
-pan style=3D"font-size:11pt;background-color:transparent;font-variant-numer=
-ic:normal;font-variant-east-asian:normal;font-variant-alternates:normal;ver=
-tical-align:baseline">Bitbake setup process/tooling</span></p></li><li dir=
-=3D"ltr" style=3D"list-style-type:circle;font-size:11pt;font-family:Arial,s=
-ans-serif;color:rgb(0,0,0);background-color:transparent;font-variant-numeri=
-c:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vert=
-ical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.=
-38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"f=
-ont-size:11pt;background-color:transparent;font-variant-numeric:normal;font=
--variant-east-asian:normal;font-variant-alternates:normal;vertical-align:ba=
-seline">GUI screen shot QA test</span></p></li><li dir=3D"ltr" style=3D"lis=
-t-style-type:circle;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0=
-,0,0);background-color:transparent;font-variant-numeric:normal;font-variant=
--east-asian:normal;font-variant-alternates:normal;vertical-align:baseline;w=
-hite-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;mar=
-gin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;backgro=
-und-color:transparent;font-variant-numeric:normal;font-variant-east-asian:n=
-ormal;font-variant-alternates:normal;vertical-align:baseline">IDE Plugin de=
-velopment</span></p></li><li dir=3D"ltr" style=3D"list-style-type:circle;fo=
-nt-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color=
-:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;fon=
-t-variant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=
-=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=
-=3D"presentation"><span style=3D"font-size:11pt;background-color:transparen=
-t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
-lternates:normal;vertical-align:baseline">Layer Index</span></p></li><li di=
-r=3D"ltr" style=3D"list-style-type:circle;font-size:11pt;font-family:Arial,=
-sans-serif;color:rgb(0,0,0);background-color:transparent;font-variant-numer=
-ic:normal;font-variant-east-asian:normal;font-variant-alternates:normal;ver=
-tical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1=
-.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"=
-font-size:11pt;background-color:transparent;font-variant-numeric:normal;fon=
-t-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:b=
-aseline">Patchtest</span></p></li><li dir=3D"ltr" style=3D"list-style-type:=
-circle;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);backgro=
-und-color:transparent;font-variant-numeric:normal;font-variant-east-asian:n=
-ormal;font-variant-alternates:normal;vertical-align:baseline;white-space:pr=
-e"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0p=
-t" role=3D"presentation"><span style=3D"font-size:11pt;background-color:tra=
-nsparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-va=
-riant-alternates:normal;vertical-align:baseline">Pseudo</span></p></li><li =
-dir=3D"ltr" style=3D"list-style-type:circle;font-size:11pt;font-family:Aria=
-l,sans-serif;color:rgb(0,0,0);background-color:transparent;font-variant-num=
-eric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;v=
-ertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height=
-:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=
-=3D"font-size:11pt;background-color:transparent;font-variant-numeric:normal=
-;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-ali=
-gn:baseline">Security Tooling</span></p></li><li dir=3D"ltr" style=3D"list-=
-style-type:circle;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0=
-,0);background-color:transparent;font-variant-numeric:normal;font-variant-e=
-ast-asian:normal;font-variant-alternates:normal;vertical-align:baseline;whi=
-te-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margi=
-n-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;backgroun=
-d-color:transparent;font-variant-numeric:normal;font-variant-east-asian:nor=
-mal;font-variant-alternates:normal;vertical-align:baseline">Swatbot</span><=
-/p></li><li dir=3D"ltr" style=3D"list-style-type:circle;font-size:11pt;font=
--family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font=
--variant-numeric:normal;font-variant-east-asian:normal;font-variant-alterna=
-tes:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D=
-"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><=
-span style=3D"font-size:11pt;background-color:transparent;font-variant-nume=
-ric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;ve=
-rtical-align:baseline">Toaster</span></p></li></ul><li dir=3D"ltr" style=3D=
-"list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb=
-(0,0,0);background-color:transparent;font-variant-numeric:normal;font-varia=
-nt-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline=
-;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;m=
-argin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;backg=
-round-color:transparent;font-variant-numeric:normal;font-variant-east-asian=
-:normal;font-variant-alternates:normal;vertical-align:baseline">If there ar=
-e other areas we should have plans for, please let us know.</span></p></li>=
-</ul><br><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bot=
-tom:0pt"><span style=3D"font-size:11pt;font-family:Arial,sans-serif;color:r=
-gb(0,0,0);background-color:transparent;font-variant-numeric:normal;font-var=
-iant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseli=
-ne">Ways to contribute:</span></p><ul style=3D"margin-top:0px;margin-bottom=
-:0px"><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-fam=
-ily:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-var=
-iant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:=
-normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"lin=
-e-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span=
- style=3D"font-size:11pt;background-color:transparent;font-variant-numeric:=
-normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertic=
-al-align:baseline">As people are likely aware, the project has a number of =
-components which are either unmaintained, or have people with little to no =
-time trying to keep them alive. These components include: devtool, toaster,=
- wic, oeqa, autobuilder, CROPs containers, pseudo and more. Many have open =
-bugs. Help is welcome in trying to better look after these components!</spa=
-n></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:9.5pt;fo=
-nt-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;fo=
-nt-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alter=
-nates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=
-=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation=
-"><span style=3D"font-size:11pt;background-color:transparent;font-variant-n=
-umeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal=
-;vertical-align:baseline">There is an issue open upstream with the openssl =
-project related to making path relocation of openssl easier (as used in our=
- buildtools tarball and SDK). We=E2=80=99d love assistance in moving this f=
-orward and getting some kind of upstream feature merged to make this easier=
-: </span><a href=3D"https://github.com/openssl/openssl/pull/19260" style=3D=
-"text-decoration-line:none"><span style=3D"font-size:11pt;background-color:=
-transparent;font-variant-numeric:normal;font-variant-east-asian:normal;font=
--variant-alternates:normal;text-decoration-line:underline;vertical-align:ba=
-seline">https://github.com/openssl/openssl/pull/19260</span></a></p></li><l=
-i dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Aria=
-l,sans-serif;color:rgb(0,0,0);background-color:transparent;font-variant-num=
-eric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;v=
-ertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height=
-:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=
-=3D"font-size:11pt;background-color:transparent;font-variant-numeric:normal=
-;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-ali=
-gn:baseline">There are bugs identified as possible for newcomers to the pro=
-ject: </span><a href=3D"https://wiki.yoctoproject.org/wiki/Newcomers" style=
-=3D"text-decoration-line:none"><span style=3D"font-size:11pt;background-col=
-or:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;f=
-ont-variant-alternates:normal;text-decoration-line:underline;vertical-align=
-:baseline">https://wiki.yoctoproject.org/wiki/Newcomers</span></a></p></li>=
-<li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Ar=
-ial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-variant-n=
-umeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal=
-;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-heig=
-ht:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=
-=3D"font-size:11pt;background-color:transparent;font-variant-numeric:normal=
-;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-ali=
-gn:baseline">There are bugs that are currently unassigned for YP 5.2. See: =
-</span><a href=3D"https://wiki.yoctoproject.org/wiki/Bug_Triage#Medium+_5.2=
-_Unassigned_Enhancements/Bugs" style=3D"text-decoration-line:none"><span st=
-yle=3D"font-size:11pt;background-color:transparent;font-variant-numeric:nor=
-mal;font-variant-east-asian:normal;font-variant-alternates:normal;text-deco=
-ration-line:underline;vertical-align:baseline">https://wiki.yoctoproject.or=
-g/wiki/Bug_Triage#Medium+_5.2_Unassigned_Enhancements/Bugs</span></a></p></=
-li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family=
-:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-varian=
-t-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:nor=
-mal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-h=
-eight:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span st=
-yle=3D"font-size:11pt;background-color:transparent;font-variant-numeric:nor=
-mal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-=
-align:baseline">We=E2=80=99d welcome new maintainers for recipes in OE-Core=
-. Please see the list at: </span><a href=3D"http://git.yoctoproject.org/cgi=
-t.cgi/poky/tree/meta/conf/distro/include/maintainers.inc" style=3D"text-dec=
-oration-line:none"><span style=3D"font-size:11pt;background-color:transpare=
-nt;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-=
-alternates:normal;text-decoration-line:underline;vertical-align:baseline">h=
-ttp://git.yoctoproject.org/cgit.cgi/poky/tree/meta/conf/distro/include/main=
-tainers.inc</span></a><span style=3D"font-size:11pt;background-color:transp=
-arent;font-variant-numeric:normal;font-variant-east-asian:normal;font-varia=
-nt-alternates:normal;vertical-align:baseline"> and discuss with the existin=
-g maintainer, or ask on the OE-Core mailing list. We will likely move a chu=
-nk of these to =E2=80=9CUnassigned=E2=80=9D soon to help facilitate this.</=
+variant-alternates:normal;vertical-align:baseline">YP 4.0.22 was released</=
 span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;=
 font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;=
 font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alt=
@@ -730,32 +501,27 @@ ernates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" styl=
 e=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentatio=
 n"><span style=3D"font-size:11pt;background-color:transparent;font-variant-=
 numeric:normal;font-variant-east-asian:normal;font-variant-alternates:norma=
-l;vertical-align:baseline">Help is very much welcome in trying to resolve o=
-ur autobuilder intermittent issues. You can see the list of failures we=E2=
-=80=99re continuing to see by searching for the =E2=80=9CAB-INT=E2=80=9D ta=
-g in bugzilla: </span><a href=3D"https://bugzilla.yoctoproject.org/buglist.=
-cgi?quicksearch=3DAB-INT" style=3D"text-decoration-line:none"><span style=
-=3D"font-size:11pt;background-color:transparent;font-variant-numeric:normal=
-;font-variant-east-asian:normal;font-variant-alternates:normal;text-decorat=
-ion-line:underline;vertical-align:baseline">https://bugzilla.yoctoproject.o=
-rg/buglist.cgi?quicksearch=3DAB-INT</span></a><span style=3D"font-size:11pt=
-;background-color:transparent;font-variant-numeric:normal;font-variant-east=
--asian:normal;font-variant-alternates:normal;vertical-align:baseline">.</sp=
-an></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;fo=
-nt-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;fo=
-nt-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alter=
-nates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=
-=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation=
-"><span style=3D"font-size:11pt;background-color:transparent;font-variant-n=
-umeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal=
-;vertical-align:baseline">Help us resolve CVE issues: </span><a href=3D"htt=
-ps://autobuilder.yocto.io/pub/non-release/patchmetrics/" style=3D"text-deco=
-ration-line:none"><span style=3D"font-size:11pt;background-color:transparen=
-t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
-lternates:normal;text-decoration-line:underline;vertical-align:baseline">CV=
-E metrics</span></a><span style=3D"font-size:11pt;background-color:transpar=
-ent;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant=
--alternates:normal;vertical-align:baseline">=C2=A0</span></p></li><li dir=
+l;vertical-align:baseline">The new autobuilder cluster (valkyrie) is up and=
+ running and all work is being done there. The old cluster is being shut do=
+wn.</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:=
+11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transpa=
+rent;font-variant-numeric:normal;font-variant-east-asian:normal;font-varian=
+t-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr"=
+ style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presen=
+tation"><span style=3D"font-size:11pt;background-color:transparent;font-var=
+iant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:=
+normal;vertical-align:baseline">The CDN and mirror tests are now working re=
+liably and we are getting green builds again. Huge thanks to Michael Halste=
+ad for the work being done, mostly behind the scenes.</span></p></li><li di=
+r=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sa=
+ns-serif;color:rgb(0,0,0);background-color:transparent;font-variant-numeric=
+:normal;font-variant-east-asian:normal;font-variant-alternates:normal;verti=
+cal-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.3=
+8;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"fo=
+nt-size:11pt;background-color:transparent;font-variant-numeric:normal;font-=
+variant-east-asian:normal;font-variant-alternates:normal;vertical-align:bas=
+eline">Progress has been made on many of the blocking intermittent issues o=
+n the new autobuilder but many rarer issues remain.</span></p></li><li dir=
 =3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,san=
 s-serif;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:=
 normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertic=
@@ -763,12 +529,286 @@ al-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38=
 ;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"fon=
 t-size:11pt;background-color:transparent;font-variant-numeric:normal;font-v=
 ariant-east-asian:normal;font-variant-alternates:normal;vertical-align:base=
-line">We have a growing number of bugs in bugzilla, any help with them is a=
-ppreciated.</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;fo=
-nt-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color=
+line">Rust tests on the MIPS architecture have been disabled as nobody is u=
+sing/supporting it.</span></p></li><li dir=3D"ltr" style=3D"list-style-type=
+:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);backgrou=
+nd-color:transparent;font-variant-numeric:normal;font-variant-east-asian:no=
+rmal;font-variant-alternates:normal;vertical-align:baseline;white-space:pre=
+"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt=
+" role=3D"presentation"><span style=3D"font-size:11pt;background-color:tran=
+sparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-var=
+iant-alternates:normal;vertical-align:baseline">Toaster test suite improvem=
+ents have merged but more work really needs to be done there to improve som=
+e of the test conditions.</span></p></li><li dir=3D"ltr" style=3D"list-styl=
+e-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);ba=
+ckground-color:transparent;font-variant-numeric:normal;font-variant-east-as=
+ian:normal;font-variant-alternates:normal;vertical-align:baseline;white-spa=
+ce:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bott=
+om:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background-colo=
+r:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;fo=
+nt-variant-alternates:normal;vertical-align:baseline">We have a new command=
+ line tool to help with the SWAT, thanks to Mathieu for putting that togeth=
+er. </span><a href=3D"https://git.yoctoproject.org/swat-tools/" style=3D"te=
+xt-decoration-line:none"><span style=3D"font-size:11pt;background-color:tra=
+nsparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-va=
+riant-alternates:normal;text-decoration-line:underline;vertical-align:basel=
+ine">https://git.yoctoproject.org/swat-tools/</span></a></p></li><li dir=3D=
+"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-s=
+erif;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:nor=
+mal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-=
+align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;ma=
+rgin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-s=
+ize:11pt;background-color:transparent;font-variant-numeric:normal;font-vari=
+ant-east-asian:normal;font-variant-alternates:normal;vertical-align:baselin=
+e">The UKI (Unified Kernel Images) series finally merged with tests, which =
+will help ensure the code keeps working in the future.</span></p></li><li d=
+ir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,s=
+ans-serif;color:rgb(0,0,0);background-color:transparent;font-variant-numeri=
+c:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vert=
+ical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.=
+38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"f=
+ont-size:11pt;background-color:transparent;font-variant-numeric:normal;font=
+-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:ba=
+seline">We=E2=80=99re seeing a pattern of people submitting patches to mast=
+er when they=E2=80=99ve only tested them against older releases. In several=
+ cases the issue wasn=E2=80=99t even present there. Please don=E2=80=99t do=
+ this, it wastes a lot of time. If you see the issue against an older relea=
+se, please make that clear.</span></p></li><li dir=3D"ltr" style=3D"list-st=
+yle-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);=
+background-color:transparent;font-variant-numeric:normal;font-variant-east-=
+asian:normal;font-variant-alternates:normal;vertical-align:baseline;white-s=
+pace:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bo=
+ttom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background-co=
+lor:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;=
+font-variant-alternates:normal;vertical-align:baseline">For 5.2 it would be=
+ helpful to have rough development plans for areas of the project if anyone=
+ is able to help document a rough roadmap/plan for them. The following area=
+s are known to be being or need working on:</span></p></li><ul style=3D"mar=
+gin-top:0px;margin-bottom:0px"><li dir=3D"ltr" style=3D"list-style-type:cir=
+cle;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background=
+-color:transparent;font-variant-numeric:normal;font-variant-east-asian:norm=
+al;font-variant-alternates:normal;vertical-align:baseline;white-space:pre">=
+<p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" =
+role=3D"presentation"><span style=3D"font-size:11pt;background-color:transp=
+arent;font-variant-numeric:normal;font-variant-east-asian:normal;font-varia=
+nt-alternates:normal;vertical-align:baseline">Autobuilder</span></p></li><l=
+i dir=3D"ltr" style=3D"list-style-type:circle;font-size:11pt;font-family:Ar=
+ial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-variant-n=
+umeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal=
+;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-heig=
+ht:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=
+=3D"font-size:11pt;background-color:transparent;font-variant-numeric:normal=
+;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-ali=
+gn:baseline">Binary Distro</span></p></li><li dir=3D"ltr" style=3D"list-sty=
+le-type:circle;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0)=
+;background-color:transparent;font-variant-numeric:normal;font-variant-east=
+-asian:normal;font-variant-alternates:normal;vertical-align:baseline;white-=
+space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-b=
+ottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background-c=
+olor:transparent;font-variant-numeric:normal;font-variant-east-asian:normal=
+;font-variant-alternates:normal;vertical-align:baseline">Bitbake config fra=
+gments</span></p></li><li dir=3D"ltr" style=3D"list-style-type:circle;font-=
+size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:tr=
+ansparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-v=
+ariant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D=
+"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"p=
+resentation"><span style=3D"font-size:11pt;background-color:transparent;fon=
+t-variant-numeric:normal;font-variant-east-asian:normal;font-variant-altern=
+ates:normal;vertical-align:baseline">Bitbake setup process/tooling</span></=
+p></li><li dir=3D"ltr" style=3D"list-style-type:circle;font-size:11pt;font-=
+family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-=
+variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternat=
+es:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"=
+line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><s=
+pan style=3D"font-size:11pt;background-color:transparent;font-variant-numer=
+ic:normal;font-variant-east-asian:normal;font-variant-alternates:normal;ver=
+tical-align:baseline">GUI screen shot QA test</span></p></li><li dir=3D"ltr=
+" style=3D"list-style-type:circle;font-size:11pt;font-family:Arial,sans-ser=
+if;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:norma=
+l;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-al=
+ign:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;marg=
+in-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-siz=
+e:11pt;background-color:transparent;font-variant-numeric:normal;font-varian=
+t-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline"=
+>IDE Plugin development</span></p></li><li dir=3D"ltr" style=3D"list-style-=
+type:circle;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);ba=
+ckground-color:transparent;font-variant-numeric:normal;font-variant-east-as=
+ian:normal;font-variant-alternates:normal;vertical-align:baseline;white-spa=
+ce:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bott=
+om:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background-colo=
+r:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;fo=
+nt-variant-alternates:normal;vertical-align:baseline">Layer Index</span></p=
+></li><li dir=3D"ltr" style=3D"list-style-type:circle;font-size:11pt;font-f=
+amily:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-v=
+ariant-numeric:normal;font-variant-east-asian:normal;font-variant-alternate=
+s:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"l=
+ine-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><sp=
+an style=3D"font-size:11pt;background-color:transparent;font-variant-numeri=
+c:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vert=
+ical-align:baseline">Patchtest</span></p></li><li dir=3D"ltr" style=3D"list=
+-style-type:circle;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,=
+0,0);background-color:transparent;font-variant-numeric:normal;font-variant-=
+east-asian:normal;font-variant-alternates:normal;vertical-align:baseline;wh=
+ite-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;marg=
+in-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;backgrou=
+nd-color:transparent;font-variant-numeric:normal;font-variant-east-asian:no=
+rmal;font-variant-alternates:normal;vertical-align:baseline">Pseudo</span><=
+/p></li><li dir=3D"ltr" style=3D"list-style-type:circle;font-size:11pt;font=
+-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font=
+-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alterna=
+tes:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D=
+"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><=
+span style=3D"font-size:11pt;background-color:transparent;font-variant-nume=
+ric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;ve=
+rtical-align:baseline">Security Tooling</span></p></li><li dir=3D"ltr" styl=
+e=3D"list-style-type:circle;font-size:11pt;font-family:Arial,sans-serif;col=
+or:rgb(0,0,0);background-color:transparent;font-variant-numeric:normal;font=
+-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:ba=
+seline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top=
+:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt=
+;background-color:transparent;font-variant-numeric:normal;font-variant-east=
+-asian:normal;font-variant-alternates:normal;vertical-align:baseline">Swatb=
+ot</span></p></li><li dir=3D"ltr" style=3D"list-style-type:circle;font-size=
+:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transp=
+arent;font-variant-numeric:normal;font-variant-east-asian:normal;font-varia=
+nt-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr=
+" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"prese=
+ntation"><span style=3D"font-size:11pt;background-color:transparent;font-va=
+riant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates=
+:normal;vertical-align:baseline">Toaster</span></p></li></ul><li dir=3D"ltr=
+" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif=
+;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:normal;=
+font-variant-east-asian:normal;font-variant-alternates:normal;vertical-alig=
+n:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin=
+-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:=
+11pt;background-color:transparent;font-variant-numeric:normal;font-variant-=
+east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">I=
+f there are other areas we should have plans for, please let us know.</span=
+></p></li></ul><br><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;=
+margin-bottom:0pt"><span style=3D"font-size:11pt;font-family:Arial,sans-ser=
+if;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:norma=
+l;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-al=
+ign:baseline">Ways to contribute:</span></p><ul style=3D"margin-top:0px;mar=
+gin-bottom:0px"><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11p=
+t;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparen=
+t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
+lternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" st=
+yle=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentat=
+ion"><span style=3D"font-size:11pt;background-color:transparent;font-varian=
+t-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:nor=
+mal;vertical-align:baseline">As people are likely aware, the project has a =
+number of components which are either unmaintained, or have people with lit=
+tle to no time trying to keep them alive. These components include: devtool=
+, toaster, wic, oeqa, autobuilder, CROPs containers, pseudo and more. Many =
+have open bugs. Help is welcome in trying to better look after these compon=
+ents!</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-siz=
+e:9.5pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:tran=
+sparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-var=
+iant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"l=
+tr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"pre=
+sentation"><span style=3D"font-size:11pt;background-color:transparent;font-=
+variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternat=
+es:normal;vertical-align:baseline">There is an issue open upstream with the=
+ openssl project related to making path relocation of openssl easier (as us=
+ed in our buildtools tarball and SDK). We=E2=80=99d love assistance in movi=
+ng this forward and getting some kind of upstream feature merged to make th=
+is easier: </span><a href=3D"https://github.com/openssl/openssl/pull/19260"=
+ style=3D"text-decoration-line:none"><span style=3D"font-size:11pt;backgrou=
+nd-color:transparent;font-variant-numeric:normal;font-variant-east-asian:no=
+rmal;font-variant-alternates:normal;text-decoration-line:underline;vertical=
+-align:baseline">https://github.com/openssl/openssl/pull/19260</span></a></=
+p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-fa=
+mily:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-va=
+riant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates=
+:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"li=
+ne-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><spa=
+n style=3D"font-size:11pt;background-color:transparent;font-variant-numeric=
+:normal;font-variant-east-asian:normal;font-variant-alternates:normal;verti=
+cal-align:baseline">There are bugs identified as possible for newcomers to =
+the project: </span><a href=3D"https://wiki.yoctoproject.org/wiki/Newcomers=
+" style=3D"text-decoration-line:none"><span style=3D"font-size:11pt;backgro=
+und-color:transparent;font-variant-numeric:normal;font-variant-east-asian:n=
+ormal;font-variant-alternates:normal;text-decoration-line:underline;vertica=
+l-align:baseline">https://wiki.yoctoproject.org/wiki/Newcomers</span></a></=
+p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-fa=
+mily:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-va=
+riant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates=
+:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"li=
+ne-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><spa=
+n style=3D"font-size:11pt;background-color:transparent;font-variant-numeric=
+:normal;font-variant-east-asian:normal;font-variant-alternates:normal;verti=
+cal-align:baseline">There are bugs that are currently unassigned for YP 5.2=
+. See: </span><a href=3D"https://wiki.yoctoproject.org/wiki/Bug_Triage#Medi=
+um+_5.2_Unassigned_Enhancements/Bugs" style=3D"text-decoration-line:none"><=
+span style=3D"font-size:11pt;background-color:transparent;font-variant-nume=
+ric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;te=
+xt-decoration-line:underline;vertical-align:baseline">https://wiki.yoctopro=
+ject.org/wiki/Bug_Triage#Medium+_5.2_Unassigned_Enhancements/Bugs</span></a=
+></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font=
+-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font=
+-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alterna=
+tes:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D=
+"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><=
+span style=3D"font-size:11pt;background-color:transparent;font-variant-nume=
+ric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;ve=
+rtical-align:baseline">We=E2=80=99d welcome new maintainers for recipes in =
+OE-Core. Please see the list at: </span><a href=3D"http://git.yoctoproject.=
+org/cgit.cgi/poky/tree/meta/conf/distro/include/maintainers.inc" style=3D"t=
+ext-decoration-line:none"><span style=3D"font-size:11pt;background-color:tr=
+ansparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-v=
+ariant-alternates:normal;text-decoration-line:underline;vertical-align:base=
+line">http://git.yoctoproject.org/cgit.cgi/poky/tree/meta/conf/distro/inclu=
+de/maintainers.inc</span></a><span style=3D"font-size:11pt;background-color=
 :transparent;font-variant-numeric:normal;font-variant-east-asian:normal;fon=
-t-variant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=
-=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=
+t-variant-alternates:normal;vertical-align:baseline"> and discuss with the =
+existing maintainer, or ask on the OE-Core mailing list. We will likely mov=
+e a chunk of these to =E2=80=9CUnassigned=E2=80=9D soon to help facilitate =
+this.</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-siz=
+e:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:trans=
+parent;font-variant-numeric:normal;font-variant-east-asian:normal;font-vari=
+ant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"lt=
+r" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"pres=
+entation"><span style=3D"font-size:11pt;background-color:transparent;font-v=
+ariant-numeric:normal;font-variant-east-asian:normal;font-variant-alternate=
+s:normal;vertical-align:baseline">Help is very much welcome in trying to re=
+solve our autobuilder intermittent issues. You can see the list of failures=
+ we=E2=80=99re continuing to see by searching for the =E2=80=9CAB-INT=E2=80=
+=9D tag in bugzilla: </span><a href=3D"https://bugzilla.yoctoproject.org/bu=
+glist.cgi?quicksearch=3DAB-INT" style=3D"text-decoration-line:none"><span s=
+tyle=3D"font-size:11pt;background-color:transparent;font-variant-numeric:no=
+rmal;font-variant-east-asian:normal;font-variant-alternates:normal;text-dec=
+oration-line:underline;vertical-align:baseline">https://bugzilla.yoctoproje=
+ct.org/buglist.cgi?quicksearch=3DAB-INT</span></a><span style=3D"font-size:=
+11pt;background-color:transparent;font-variant-numeric:normal;font-variant-=
+east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">.=
+</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11p=
+t;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparen=
+t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
+lternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" st=
+yle=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentat=
+ion"><span style=3D"font-size:11pt;background-color:transparent;font-varian=
+t-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:nor=
+mal;vertical-align:baseline">Help us resolve CVE issues: </span><a href=3D"=
+https://autobuilder.yocto.io/pub/non-release/patchmetrics/" style=3D"text-d=
+ecoration-line:none"><span style=3D"font-size:11pt;background-color:transpa=
+rent;font-variant-numeric:normal;font-variant-east-asian:normal;font-varian=
+t-alternates:normal;text-decoration-line:underline;vertical-align:baseline"=
+>CVE metrics</span></a><span style=3D"font-size:11pt;background-color:trans=
+parent;font-variant-numeric:normal;font-variant-east-asian:normal;font-vari=
+ant-alternates:normal;vertical-align:baseline">=C2=A0</span></p></li><li di=
+r=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sa=
+ns-serif;color:rgb(0,0,0);background-color:transparent;font-variant-numeric=
+:normal;font-variant-east-asian:normal;font-variant-alternates:normal;verti=
+cal-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.3=
+8;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"fo=
+nt-size:11pt;background-color:transparent;font-variant-numeric:normal;font-=
+variant-east-asian:normal;font-variant-alternates:normal;vertical-align:bas=
+eline">We have a growing number of bugs in bugzilla, any help with them is =
+appreciated.</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;f=
+ont-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-colo=
+r:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;fo=
+nt-variant-alternates:normal;vertical-align:baseline;white-space:pre"><p di=
+r=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=
 =3D"presentation"><span style=3D"font-size:11pt;background-color:transparen=
 t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
 lternates:normal;vertical-align:baseline">Regarding bugs, even if you can=
@@ -794,7 +834,7 @@ transparent;font-variant-numeric:normal;font-variant-east-asian:normal;font=
 =3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=
 =3D"presentation"><span style=3D"font-size:11pt;background-color:transparen=
 t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
-lternates:normal;vertical-align:baseline">WDD 2776 (last week 2744) </span>=
+lternates:normal;vertical-align:baseline">WDD 2756 (last week 2776) </span>=
 <span style=3D"font-size:11pt;font-family:Consolas,sans-serif;background-co=
 lor:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;=
 font-variant-alternates:normal;vertical-align:baseline">(</span><a href=3D"=
@@ -821,8 +861,8 @@ l;font-variant-alternates:normal;vertical-align:baseline;white-space:pre"><=
 p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" r=
 ole=3D"presentation"><span style=3D"font-size:11pt;background-color:transpa=
 rent;font-variant-numeric:normal;font-variant-east-asian:normal;font-varian=
-t-alternates:normal;vertical-align:baseline">Total patches found: 1078 (las=
-t week 1072)</span></p></li><li dir=3D"ltr" style=3D"list-style-type:circle=
+t-alternates:normal;vertical-align:baseline">Total patches found: 1063 (las=
+t week 1078)</span></p></li><li dir=3D"ltr" style=3D"list-style-type:circle=
 ;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-co=
 lor:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;=
 font-variant-alternates:normal;vertical-align:baseline;white-space:pre"><p =
@@ -845,7 +885,7 @@ ine">https://autobuilder.yocto.io/pub/non-release/patchmetrics/</span></a><=
 pt;margin-bottom:0pt"><span style=3D"font-size:11pt;font-family:Arial,sans-=
 serif;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:no=
 rmal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical=
--align:baseline">YP 5.1 Milestone Dates:</span></p><ul style=3D"margin-top:=
+-align:baseline">YP 5.2 Milestone Dates:</span></p><ul style=3D"margin-top:=
 0px;margin-bottom:0px"><li dir=3D"ltr" style=3D"list-style-type:disc;font-s=
 ize:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:tra=
 nsparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-va=
@@ -853,58 +893,7 @@ riant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"=
 ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"pr=
 esentation"><span style=3D"font-size:11pt;background-color:transparent;font=
 -variant-numeric:normal;font-variant-east-asian:normal;font-variant-alterna=
-tes:normal;vertical-align:baseline">YP 5.1 is released.</span></p></li></ul=
-><br><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:=
-0pt"><span style=3D"font-size:11pt;font-family:Arial,sans-serif;color:rgb(0=
-,0,0);background-color:transparent;font-variant-numeric:normal;font-variant=
--east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">=
-YP 5.2 Milestone Dates:</span></p><ul style=3D"margin-top:0px;margin-bottom=
-:0px"><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-fam=
-ily:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-var=
-iant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:=
-normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"lin=
-e-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span=
- style=3D"font-size:11pt;background-color:transparent;font-variant-numeric:=
-normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertic=
-al-align:baseline">YP 5.2 M1 Build Date 2024-12-09</span><span style=3D"fon=
-t-size:11pt;background-color:transparent;font-variant-numeric:normal;font-v=
-ariant-east-asian:normal;font-variant-alternates:normal;vertical-align:base=
-line"><span class=3D"gmail-Apple-tab-span" style=3D"text-wrap-mode: nowrap;=
-">	</span></span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;fon=
-t-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:=
-transparent;font-variant-numeric:normal;font-variant-east-asian:normal;font=
--variant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=
-=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=
-=3D"presentation"><span style=3D"font-size:11pt;background-color:transparen=
-t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
-lternates:normal;vertical-align:baseline">YP 5.2 M1 Release Date 2024-12-20=
-</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11p=
-t;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparen=
-t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
-lternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" st=
-yle=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentat=
-ion"><span style=3D"font-size:11pt;background-color:transparent;font-varian=
-t-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:nor=
-mal;vertical-align:baseline">YP 5.2 M2 Build Date 2025-01-20</span><span st=
-yle=3D"font-size:11pt;background-color:transparent;font-variant-numeric:nor=
-mal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-=
-align:baseline"><span class=3D"gmail-Apple-tab-span" style=3D"text-wrap-mod=
-e: nowrap;">	</span></span></p></li><li dir=3D"ltr" style=3D"list-style-typ=
-e:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);backgro=
-und-color:transparent;font-variant-numeric:normal;font-variant-east-asian:n=
-ormal;font-variant-alternates:normal;vertical-align:baseline;white-space:pr=
-e"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0p=
-t" role=3D"presentation"><span style=3D"font-size:11pt;background-color:tra=
-nsparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-va=
-riant-alternates:normal;vertical-align:baseline">YP 5.2 M2 Release Date 202=
-5-01-31</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-s=
-ize:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:tra=
-nsparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-va=
-riant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"=
-ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"pr=
-esentation"><span style=3D"font-size:11pt;background-color:transparent;font=
--variant-numeric:normal;font-variant-east-asian:normal;font-variant-alterna=
-tes:normal;vertical-align:baseline">YP 5.2 M3 Build Date 2025-03-03</span><=
+tes:normal;vertical-align:baseline">YP 5.2 M1 Build Date 2024-12-09</span><=
 span style=3D"font-size:11pt;background-color:transparent;font-variant-nume=
 ric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;ve=
 rtical-align:baseline"><span class=3D"gmail-Apple-tab-span" style=3D"text-w=
@@ -915,15 +904,15 @@ asian:normal;font-variant-alternates:normal;vertical-align:baseline;white-s=
 pace:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bo=
 ttom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background-co=
 lor:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;=
-font-variant-alternates:normal;vertical-align:baseline">YP 5.2 M3 Release D=
-ate 2025-03-14</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc=
+font-variant-alternates:normal;vertical-align:baseline">YP 5.2 M1 Release D=
+ate 2024-12-20</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc=
 ;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-co=
 lor:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;=
 font-variant-alternates:normal;vertical-align:baseline;white-space:pre"><p =
 dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" rol=
 e=3D"presentation"><span style=3D"font-size:11pt;background-color:transpare=
 nt;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-=
-alternates:normal;vertical-align:baseline">YP 5.2 M4 Build Date 2025-03-31<=
+alternates:normal;vertical-align:baseline">YP 5.2 M2 Build Date 2025-01-20<=
 /span><span style=3D"font-size:11pt;background-color:transparent;font-varia=
 nt-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:no=
 rmal;vertical-align:baseline"><span class=3D"gmail-Apple-tab-span" style=3D=
@@ -934,28 +923,74 @@ t-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline;=
 white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;ma=
 rgin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;backgr=
 ound-color:transparent;font-variant-numeric:normal;font-variant-east-asian:=
-normal;font-variant-alternates:normal;vertical-align:baseline">YP 5.2 M4 Re=
-lease Date 2025-04-25</span></p></li></ul><br><p dir=3D"ltr" style=3D"line-=
-height:1.38;margin-top:0pt;margin-bottom:0pt"><span style=3D"font-size:11pt=
-;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent=
-;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-al=
-ternates:normal;vertical-align:baseline">Upcoming dot releases:</span></p><=
-ul style=3D"margin-top:0px;margin-bottom:0px"><li dir=3D"ltr" style=3D"list=
--style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,=
-0);background-color:transparent;font-variant-numeric:normal;font-variant-ea=
-st-asian:normal;font-variant-alternates:normal;vertical-align:baseline;whit=
-e-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin=
--bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background=
--color:transparent;font-variant-numeric:normal;font-variant-east-asian:norm=
-al;font-variant-alternates:normal;vertical-align:baseline">YP 4.0.22 is in =
-review.</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-s=
-ize:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:tra=
-nsparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-va=
-riant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"=
-ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"pr=
-esentation"><span style=3D"font-size:11pt;background-color:transparent;font=
--variant-numeric:normal;font-variant-east-asian:normal;font-variant-alterna=
-tes:normal;vertical-align:baseline">YP 5.0.5 Build Date 2024-11-11</span></=
+normal;font-variant-alternates:normal;vertical-align:baseline">YP 5.2 M2 Re=
+lease Date 2025-01-31</span></p></li><li dir=3D"ltr" style=3D"list-style-ty=
+pe:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);backgr=
+ound-color:transparent;font-variant-numeric:normal;font-variant-east-asian:=
+normal;font-variant-alternates:normal;vertical-align:baseline;white-space:p=
+re"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0=
+pt" role=3D"presentation"><span style=3D"font-size:11pt;background-color:tr=
+ansparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-v=
+ariant-alternates:normal;vertical-align:baseline">YP 5.2 M3 Build Date 2025=
+-03-03</span><span style=3D"font-size:11pt;background-color:transparent;fon=
+t-variant-numeric:normal;font-variant-east-asian:normal;font-variant-altern=
+ates:normal;vertical-align:baseline"><span class=3D"gmail-Apple-tab-span" s=
+tyle=3D"text-wrap-mode: nowrap;">	</span></span></p></li><li dir=3D"ltr" st=
+yle=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;col=
+or:rgb(0,0,0);background-color:transparent;font-variant-numeric:normal;font=
+-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:ba=
+seline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top=
+:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt=
+;background-color:transparent;font-variant-numeric:normal;font-variant-east=
+-asian:normal;font-variant-alternates:normal;vertical-align:baseline">YP 5.=
+2 M3 Release Date 2025-03-14</span></p></li><li dir=3D"ltr" style=3D"list-s=
+tyle-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0)=
+;background-color:transparent;font-variant-numeric:normal;font-variant-east=
+-asian:normal;font-variant-alternates:normal;vertical-align:baseline;white-=
+space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-b=
+ottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background-c=
+olor:transparent;font-variant-numeric:normal;font-variant-east-asian:normal=
+;font-variant-alternates:normal;vertical-align:baseline">YP 5.2 M4 Build Da=
+te 2025-03-31</span><span style=3D"font-size:11pt;background-color:transpar=
+ent;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant=
+-alternates:normal;vertical-align:baseline"><span class=3D"gmail-Apple-tab-=
+span" style=3D"text-wrap-mode: nowrap;">	</span></span></p></li><li dir=3D"=
+ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-se=
+rif;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:norm=
+al;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-a=
+lign:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;mar=
+gin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-si=
+ze:11pt;background-color:transparent;font-variant-numeric:normal;font-varia=
+nt-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline=
+">YP 5.2 M4 Release Date 2025-04-25</span></p></li></ul><br><p dir=3D"ltr" =
+style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt"><span style=3D"=
+font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-col=
+or:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;f=
+ont-variant-alternates:normal;vertical-align:baseline">Upcoming dot release=
+s:</span></p><ul style=3D"margin-top:0px;margin-bottom:0px"><li dir=3D"ltr"=
+ style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;=
+color:rgb(0,0,0);background-color:transparent;font-variant-numeric:normal;f=
+ont-variant-east-asian:normal;font-variant-alternates:normal;vertical-align=
+:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-=
+top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:1=
+1pt;background-color:transparent;font-variant-numeric:normal;font-variant-e=
+ast-asian:normal;font-variant-alternates:normal;vertical-align:baseline">YP=
+ 4.0.22 was released.</span></p></li><li dir=3D"ltr" style=3D"list-style-ty=
+pe:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);backgr=
+ound-color:transparent;font-variant-numeric:normal;font-variant-east-asian:=
+normal;font-variant-alternates:normal;vertical-align:baseline;white-space:p=
+re"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0=
+pt" role=3D"presentation"><span style=3D"font-size:11pt;background-color:tr=
+ansparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-v=
+ariant-alternates:normal;vertical-align:baseline">YP 5.0.5 Build Date 2024-=
+11-11</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-siz=
+e:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:trans=
+parent;font-variant-numeric:normal;font-variant-east-asian:normal;font-vari=
+ant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"lt=
+r" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"pres=
+entation"><span style=3D"font-size:11pt;background-color:transparent;font-v=
+ariant-numeric:normal;font-variant-east-asian:normal;font-variant-alternate=
+s:normal;vertical-align:baseline">YP 5.0.5 Release Date 2024-11-22</span></=
 p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-fa=
 mily:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-va=
 riant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates=
@@ -963,7 +998,7 @@ riant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates=
 ne-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><spa=
 n style=3D"font-size:11pt;background-color:transparent;font-variant-numeric=
 :normal;font-variant-east-asian:normal;font-variant-alternates:normal;verti=
-cal-align:baseline">YP 5.0.5 Release Date 2024-11-22</span></p></li><li dir=
+cal-align:baseline">YP 4.0.23 Build Date 2024-11-18</span></p></li><li dir=
 =3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,san=
 s-serif;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:=
 normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertic=
@@ -971,207 +1006,142 @@ al-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38=
 ;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"fon=
 t-size:11pt;background-color:transparent;font-variant-numeric:normal;font-v=
 ariant-east-asian:normal;font-variant-alternates:normal;vertical-align:base=
-line">YP 4.0.23 Build Date 2024-11-18</span></p></li><li dir=3D"ltr" style=
-=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:=
-rgb(0,0,0);background-color:transparent;font-variant-numeric:normal;font-va=
-riant-east-asian:normal;font-variant-alternates:normal;vertical-align:basel=
-ine;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0p=
-t;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;ba=
-ckground-color:transparent;font-variant-numeric:normal;font-variant-east-as=
-ian:normal;font-variant-alternates:normal;vertical-align:baseline">YP 4.0.2=
-3 Release Date 2024-11-29</span></p></li><li dir=3D"ltr" style=3D"list-styl=
-e-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);ba=
-ckground-color:transparent;font-variant-numeric:normal;font-variant-east-as=
-ian:normal;font-variant-alternates:normal;vertical-align:baseline;white-spa=
-ce:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bott=
-om:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background-colo=
-r:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;fo=
-nt-variant-alternates:normal;vertical-align:baseline">YP 5.1.1 Build Date 2=
-024-12-02=C2=A0</span></p></li><li dir=3D"ltr" style=3D"list-style-type:dis=
+line">YP 4.0.23 Release Date 2024-11-29</span></p></li><li dir=3D"ltr" styl=
+e=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color=
+:rgb(0,0,0);background-color:transparent;font-variant-numeric:normal;font-v=
+ariant-east-asian:normal;font-variant-alternates:normal;vertical-align:base=
+line;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0=
+pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;b=
+ackground-color:transparent;font-variant-numeric:normal;font-variant-east-a=
+sian:normal;font-variant-alternates:normal;vertical-align:baseline">YP 5.1.=
+1 Build Date 2024-12-02=C2=A0</span></p></li><li dir=3D"ltr" style=3D"list-=
+style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0=
+);background-color:transparent;font-variant-numeric:normal;font-variant-eas=
+t-asian:normal;font-variant-alternates:normal;vertical-align:baseline;white=
+-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-=
+bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background-=
+color:transparent;font-variant-numeric:normal;font-variant-east-asian:norma=
+l;font-variant-alternates:normal;vertical-align:baseline">YP 5.1.1 Release =
+Date 2024-12-13</span></p></li><li dir=3D"ltr" style=3D"list-style-type:dis=
 c;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-c=
 olor:transparent;font-variant-numeric:normal;font-variant-east-asian:normal=
 ;font-variant-alternates:normal;vertical-align:baseline;white-space:pre"><p=
  dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" ro=
 le=3D"presentation"><span style=3D"font-size:11pt;background-color:transpar=
 ent;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant=
--alternates:normal;vertical-align:baseline">YP 5.1.1 Release Date 2024-12-1=
-3</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11=
-pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transpare=
-nt;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-=
-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" s=
-tyle=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presenta=
-tion"><span style=3D"font-size:11pt;background-color:transparent;font-varia=
-nt-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:no=
-rmal;vertical-align:baseline">YP 5.0.6 Build Date 2024-12-16=C2=A0</span></=
-p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-fa=
-mily:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-va=
-riant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates=
-:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"li=
-ne-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><spa=
-n style=3D"font-size:11pt;background-color:transparent;font-variant-numeric=
-:normal;font-variant-east-asian:normal;font-variant-alternates:normal;verti=
-cal-align:baseline">YP 5.0.6 Release Date 2024-12-27</span></p></li><li dir=
-=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,san=
-s-serif;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:=
-normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertic=
-al-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38=
-;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"fon=
-t-size:11pt;background-color:transparent;font-variant-numeric:normal;font-v=
-ariant-east-asian:normal;font-variant-alternates:normal;vertical-align:base=
-line">YP 4.0.24 Build Date 2025-01-06</span><span style=3D"font-size:11pt;b=
-ackground-color:transparent;font-variant-numeric:normal;font-variant-east-a=
-sian:normal;font-variant-alternates:normal;vertical-align:baseline"><span c=
-lass=3D"gmail-Apple-tab-span" style=3D"text-wrap-mode: nowrap;">	</span></s=
-pan></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;f=
-ont-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;f=
-ont-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alte=
-rnates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=
-=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation=
-"><span style=3D"font-size:11pt;background-color:transparent;font-variant-n=
-umeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal=
-;vertical-align:baseline">YP 4.0.24 Release Date 2025-01-17</span></p></li>=
-<li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Ar=
-ial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-variant-n=
-umeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal=
-;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-heig=
-ht:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=
-=3D"font-size:11pt;background-color:transparent;font-variant-numeric:normal=
-;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-ali=
-gn:baseline">YP 5.1.2 Build Date 2025-01-13</span><span style=3D"font-size:=
-11pt;background-color:transparent;font-variant-numeric:normal;font-variant-=
-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline"><=
-span class=3D"gmail-Apple-tab-span" style=3D"text-wrap-mode: nowrap;">	</sp=
-an></span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:=
-11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transpa=
-rent;font-variant-numeric:normal;font-variant-east-asian:normal;font-varian=
-t-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr"=
- style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presen=
-tation"><span style=3D"font-size:11pt;background-color:transparent;font-var=
-iant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:=
-normal;vertical-align:baseline">YP 5.1.2 Release Date 2025-01-24</span></p>=
-</li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-fami=
-ly:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-vari=
-ant-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:n=
-ormal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line=
--height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span =
-style=3D"font-size:11pt;background-color:transparent;font-variant-numeric:n=
-ormal;font-variant-east-asian:normal;font-variant-alternates:normal;vertica=
-l-align:baseline">YP 5.0.7 Build Date 2025-01-27</span><span style=3D"font-=
-size:11pt;background-color:transparent;font-variant-numeric:normal;font-var=
-iant-east-asian:normal;font-variant-alternates:normal;vertical-align:baseli=
-ne"><span class=3D"gmail-Apple-tab-span" style=3D"text-wrap-mode: nowrap;">=
-	</span></span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-=
-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:tr=
-ansparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-v=
-ariant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D=
-"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"p=
-resentation"><span style=3D"font-size:11pt;background-color:transparent;fon=
-t-variant-numeric:normal;font-variant-east-asian:normal;font-variant-altern=
-ates:normal;vertical-align:baseline">YP 5.0.7 Release Date 2025-02-07</span=
-></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font=
--family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font=
--variant-numeric:normal;font-variant-east-asian:normal;font-variant-alterna=
-tes:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D=
-"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><=
-span style=3D"font-size:11pt;background-color:transparent;font-variant-nume=
-ric:normal;font-variant-east-asian:normal;font-variant-alternates:normal;ve=
-rtical-align:baseline">YP 4.0.25 Build Date 2025-02-17</span><span style=3D=
-"font-size:11pt;background-color:transparent;font-variant-numeric:normal;fo=
-nt-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:=
-baseline"><span class=3D"gmail-Apple-tab-span" style=3D"text-wrap-mode: now=
-rap;">	</span></span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc=
-;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-co=
-lor:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;=
-font-variant-alternates:normal;vertical-align:baseline;white-space:pre"><p =
-dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" rol=
-e=3D"presentation"><span style=3D"font-size:11pt;background-color:transpare=
-nt;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-=
-alternates:normal;vertical-align:baseline">YP 4.0.25 Release Date 2025-02-2=
-8</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11=
-pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transpare=
-nt;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-=
-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" s=
-tyle=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presenta=
-tion"><span style=3D"font-size:11pt;background-color:transparent;font-varia=
-nt-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:no=
-rmal;vertical-align:baseline">YP 5.1.3 Build Date 2025-02-24</span><span st=
-yle=3D"font-size:11pt;background-color:transparent;font-variant-numeric:nor=
-mal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-=
-align:baseline"><span class=3D"gmail-Apple-tab-span" style=3D"text-wrap-mod=
-e: nowrap;">	</span></span></p></li><li dir=3D"ltr" style=3D"list-style-typ=
-e:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);backgro=
-und-color:transparent;font-variant-numeric:normal;font-variant-east-asian:n=
-ormal;font-variant-alternates:normal;vertical-align:baseline;white-space:pr=
-e"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0p=
-t" role=3D"presentation"><span style=3D"font-size:11pt;background-color:tra=
-nsparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-va=
-riant-alternates:normal;vertical-align:baseline">YP 5.1.3 Release Date 2025=
--03-07</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-si=
+-alternates:normal;vertical-align:baseline">YP 5.0.6 Build Date 2024-12-16=
+=C2=A0</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-si=
 ze:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:tran=
 sparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-var=
 iant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"l=
 tr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"pre=
 sentation"><span style=3D"font-size:11pt;background-color:transparent;font-=
 variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternat=
-es:normal;vertical-align:baseline">YP 5.0.8 Build Date 2025-03-10</span><sp=
+es:normal;vertical-align:baseline">YP 5.0.6 Release Date 2024-12-27</span><=
+/p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-f=
+amily:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-v=
+ariant-numeric:normal;font-variant-east-asian:normal;font-variant-alternate=
+s:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"l=
+ine-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><sp=
 an style=3D"font-size:11pt;background-color:transparent;font-variant-numeri=
 c:normal;font-variant-east-asian:normal;font-variant-alternates:normal;vert=
-ical-align:baseline"><span class=3D"gmail-Apple-tab-span" style=3D"text-wra=
-p-mode: nowrap;">	</span></span></p></li><li dir=3D"ltr" style=3D"list-styl=
-e-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);ba=
-ckground-color:transparent;font-variant-numeric:normal;font-variant-east-as=
-ian:normal;font-variant-alternates:normal;vertical-align:baseline;white-spa=
-ce:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bott=
-om:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background-colo=
+ical-align:baseline">YP 4.0.24 Build Date 2025-01-06</span><span style=3D"f=
+ont-size:11pt;background-color:transparent;font-variant-numeric:normal;font=
+-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:ba=
+seline"><span class=3D"gmail-Apple-tab-span" style=3D"text-wrap-mode: nowra=
+p;">	</span></span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;f=
+ont-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-colo=
 r:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;fo=
-nt-variant-alternates:normal;vertical-align:baseline">YP 5.0.8 Release Date=
- 2025-03-21</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;fo=
-nt-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color=
+nt-variant-alternates:normal;vertical-align:baseline;white-space:pre"><p di=
+r=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=
+=3D"presentation"><span style=3D"font-size:11pt;background-color:transparen=
+t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
+lternates:normal;vertical-align:baseline">YP 4.0.24 Release Date 2025-01-17=
+</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11p=
+t;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparen=
+t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
+lternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" st=
+yle=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentat=
+ion"><span style=3D"font-size:11pt;background-color:transparent;font-varian=
+t-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:nor=
+mal;vertical-align:baseline">YP 5.1.2 Build Date 2025-01-13</span><span sty=
+le=3D"font-size:11pt;background-color:transparent;font-variant-numeric:norm=
+al;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-a=
+lign:baseline"><span class=3D"gmail-Apple-tab-span" style=3D"text-wrap-mode=
+: nowrap;">	</span></span></p></li><li dir=3D"ltr" style=3D"list-style-type=
+:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);backgrou=
+nd-color:transparent;font-variant-numeric:normal;font-variant-east-asian:no=
+rmal;font-variant-alternates:normal;vertical-align:baseline;white-space:pre=
+"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt=
+" role=3D"presentation"><span style=3D"font-size:11pt;background-color:tran=
+sparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-var=
+iant-alternates:normal;vertical-align:baseline">YP 5.1.2 Release Date 2025-=
+01-24</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-siz=
+e:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:trans=
+parent;font-variant-numeric:normal;font-variant-east-asian:normal;font-vari=
+ant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"lt=
+r" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"pres=
+entation"><span style=3D"font-size:11pt;background-color:transparent;font-v=
+ariant-numeric:normal;font-variant-east-asian:normal;font-variant-alternate=
+s:normal;vertical-align:baseline">YP 5.0.7 Build Date 2025-01-27</span><spa=
+n style=3D"font-size:11pt;background-color:transparent;font-variant-numeric=
+:normal;font-variant-east-asian:normal;font-variant-alternates:normal;verti=
+cal-align:baseline"><span class=3D"gmail-Apple-tab-span" style=3D"text-wrap=
+-mode: nowrap;">	</span></span></p></li><li dir=3D"ltr" style=3D"list-style=
+-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);bac=
+kground-color:transparent;font-variant-numeric:normal;font-variant-east-asi=
+an:normal;font-variant-alternates:normal;vertical-align:baseline;white-spac=
+e:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-botto=
+m:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background-color=
 :transparent;font-variant-numeric:normal;font-variant-east-asian:normal;fon=
-t-variant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=
+t-variant-alternates:normal;vertical-align:baseline">YP 5.0.7 Release Date =
+2025-02-07</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;fon=
+t-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:=
+transparent;font-variant-numeric:normal;font-variant-east-asian:normal;font=
+-variant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=
 =3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=
 =3D"presentation"><span style=3D"font-size:11pt;background-color:transparen=
 t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
-lternates:normal;vertical-align:baseline">YP 5.1.4 Build Date 2025-03-24</s=
-pan><span style=3D"font-size:11pt;background-color:transparent;font-variant=
--numeric:normal;font-variant-east-asian:normal;font-variant-alternates:norm=
-al;vertical-align:baseline"><span class=3D"gmail-Apple-tab-span" style=3D"t=
-ext-wrap-mode: nowrap;">	</span></span></p></li><li dir=3D"ltr" style=3D"li=
-st-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,=
-0,0);background-color:transparent;font-variant-numeric:normal;font-variant-=
-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline;wh=
-ite-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;marg=
-in-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;backgrou=
-nd-color:transparent;font-variant-numeric:normal;font-variant-east-asian:no=
-rmal;font-variant-alternates:normal;vertical-align:baseline">YP 5.1.4 Relea=
-se Date 2025-04-04</span></p></li><li dir=3D"ltr" style=3D"list-style-type:=
-disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);backgroun=
-d-color:transparent;font-variant-numeric:normal;font-variant-east-asian:nor=
-mal;font-variant-alternates:normal;vertical-align:baseline;white-space:pre"=
-><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt"=
- role=3D"presentation"><span style=3D"font-size:11pt;background-color:trans=
-parent;font-variant-numeric:normal;font-variant-east-asian:normal;font-vari=
-ant-alternates:normal;vertical-align:baseline">YP 4.0.26 Build Date 2025-04=
--07</span><span style=3D"font-size:11pt;background-color:transparent;font-v=
-ariant-numeric:normal;font-variant-east-asian:normal;font-variant-alternate=
-s:normal;vertical-align:baseline"><span class=3D"gmail-Apple-tab-span" styl=
-e=3D"text-wrap-mode: nowrap;">	</span></span></p></li><li dir=3D"ltr" style=
-=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:=
-rgb(0,0,0);background-color:transparent;font-variant-numeric:normal;font-va=
-riant-east-asian:normal;font-variant-alternates:normal;vertical-align:basel=
-ine;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0p=
-t;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;ba=
-ckground-color:transparent;font-variant-numeric:normal;font-variant-east-as=
-ian:normal;font-variant-alternates:normal;vertical-align:baseline">YP 4.0.2=
-6 Release Date 2025-04-18</span></p></li><li dir=3D"ltr" style=3D"list-styl=
+lternates:normal;vertical-align:baseline">YP 4.0.25 Build Date 2025-02-17</=
+span><span style=3D"font-size:11pt;background-color:transparent;font-varian=
+t-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:nor=
+mal;vertical-align:baseline"><span class=3D"gmail-Apple-tab-span" style=3D"=
+text-wrap-mode: nowrap;">	</span></span></p></li><li dir=3D"ltr" style=3D"l=
+ist-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0=
+,0,0);background-color:transparent;font-variant-numeric:normal;font-variant=
+-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline;w=
+hite-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;mar=
+gin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;backgro=
+und-color:transparent;font-variant-numeric:normal;font-variant-east-asian:n=
+ormal;font-variant-alternates:normal;vertical-align:baseline">YP 4.0.25 Rel=
+ease Date 2025-02-28</span></p></li><li dir=3D"ltr" style=3D"list-style-typ=
+e:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);backgro=
+und-color:transparent;font-variant-numeric:normal;font-variant-east-asian:n=
+ormal;font-variant-alternates:normal;vertical-align:baseline;white-space:pr=
+e"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0p=
+t" role=3D"presentation"><span style=3D"font-size:11pt;background-color:tra=
+nsparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-va=
+riant-alternates:normal;vertical-align:baseline">YP 5.1.3 Build Date 2025-0=
+2-24</span><span style=3D"font-size:11pt;background-color:transparent;font-=
+variant-numeric:normal;font-variant-east-asian:normal;font-variant-alternat=
+es:normal;vertical-align:baseline"><span class=3D"gmail-Apple-tab-span" sty=
+le=3D"text-wrap-mode: nowrap;">	</span></span></p></li><li dir=3D"ltr" styl=
+e=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color=
+:rgb(0,0,0);background-color:transparent;font-variant-numeric:normal;font-v=
+ariant-east-asian:normal;font-variant-alternates:normal;vertical-align:base=
+line;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0=
+pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;b=
+ackground-color:transparent;font-variant-numeric:normal;font-variant-east-a=
+sian:normal;font-variant-alternates:normal;vertical-align:baseline">YP 5.1.=
+3 Release Date 2025-03-07</span></p></li><li dir=3D"ltr" style=3D"list-styl=
 e-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);ba=
 ckground-color:transparent;font-variant-numeric:normal;font-variant-east-as=
 ian:normal;font-variant-alternates:normal;vertical-align:baseline;white-spa=
 ce:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bott=
 om:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background-colo=
 r:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;fo=
-nt-variant-alternates:normal;vertical-align:baseline">YP 5.0.9 Build Date 2=
-025-04-21</span><span style=3D"font-size:11pt;background-color:transparent;=
+nt-variant-alternates:normal;vertical-align:baseline">YP 5.0.8 Build Date 2=
+025-03-10</span><span style=3D"font-size:11pt;background-color:transparent;=
 font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alt=
 ernates:normal;vertical-align:baseline"><span class=3D"gmail-Apple-tab-span=
 " style=3D"text-wrap-mode: nowrap;">	</span></span></p></li><li dir=3D"ltr"=
@@ -1182,55 +1152,74 @@ ont-variant-east-asian:normal;font-variant-alternates:normal;vertical-align=
 top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:1=
 1pt;background-color:transparent;font-variant-numeric:normal;font-variant-e=
 ast-asian:normal;font-variant-alternates:normal;vertical-align:baseline">YP=
- 5.0.9 Release Date 2025-05-02</span></p></li><li dir=3D"ltr" style=3D"list=
+ 5.0.8 Release Date 2025-03-21</span></p></li><li dir=3D"ltr" style=3D"list=
 -style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,=
 0);background-color:transparent;font-variant-numeric:normal;font-variant-ea=
 st-asian:normal;font-variant-alternates:normal;vertical-align:baseline;whit=
 e-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin=
 -bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;background=
 -color:transparent;font-variant-numeric:normal;font-variant-east-asian:norm=
-al;font-variant-alternates:normal;vertical-align:baseline">YP 4.0.27 Build =
-Date 2025-05-19</span><span style=3D"font-size:11pt;background-color:transp=
-arent;font-variant-numeric:normal;font-variant-east-asian:normal;font-varia=
-nt-alternates:normal;vertical-align:baseline"><span class=3D"gmail-Apple-ta=
-b-span" style=3D"text-wrap-mode: nowrap;">	</span></span></p></li><li dir=
-=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,san=
-s-serif;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:=
-normal;font-variant-east-asian:normal;font-variant-alternates:normal;vertic=
-al-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38=
-;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"fon=
-t-size:11pt;background-color:transparent;font-variant-numeric:normal;font-v=
-ariant-east-asian:normal;font-variant-alternates:normal;vertical-align:base=
-line">YP 4.0.27 Release Date 2025-05-30</span></p></li><li dir=3D"ltr" styl=
-e=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color=
-:rgb(0,0,0);background-color:transparent;font-variant-numeric:normal;font-v=
-ariant-east-asian:normal;font-variant-alternates:normal;vertical-align:base=
-line;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0=
-pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;b=
-ackground-color:transparent;font-variant-numeric:normal;font-variant-east-a=
-sian:normal;font-variant-alternates:normal;vertical-align:baseline">YP 5.0.=
-10 Build Date 2025-06-02</span><span style=3D"font-size:11pt;background-col=
-or:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;f=
-ont-variant-alternates:normal;vertical-align:baseline"><span class=3D"gmail=
--Apple-tab-span" style=3D"text-wrap-mode: nowrap;">	</span></span></p></li>=
-<li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Ar=
-ial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-variant-n=
-umeric:normal;font-variant-east-asian:normal;font-variant-alternates:normal=
-;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-heig=
-ht:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=
-=3D"font-size:11pt;background-color:transparent;font-variant-numeric:normal=
-;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-ali=
-gn:baseline">YP 5.0.10 Release Date 2025-06-13</span></p></li><li dir=3D"lt=
-r" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-seri=
-f;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:normal=
-;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-ali=
-gn:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margi=
-n-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size=
-:11pt;background-color:transparent;font-variant-numeric:normal;font-variant=
--east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">=
-YP 4.0.28 Build Date 2025-06-30</span><span style=3D"font-size:11pt;backgro=
-und-color:transparent;font-variant-numeric:normal;font-variant-east-asian:n=
-ormal;font-variant-alternates:normal;vertical-align:baseline"><span class=
+al;font-variant-alternates:normal;vertical-align:baseline">YP 5.1.4 Build D=
+ate 2025-03-24</span><span style=3D"font-size:11pt;background-color:transpa=
+rent;font-variant-numeric:normal;font-variant-east-asian:normal;font-varian=
+t-alternates:normal;vertical-align:baseline"><span class=3D"gmail-Apple-tab=
+-span" style=3D"text-wrap-mode: nowrap;">	</span></span></p></li><li dir=3D=
+"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-s=
+erif;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:nor=
+mal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-=
+align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;ma=
+rgin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-s=
+ize:11pt;background-color:transparent;font-variant-numeric:normal;font-vari=
+ant-east-asian:normal;font-variant-alternates:normal;vertical-align:baselin=
+e">YP 5.1.4 Release Date 2025-04-04</span></p></li><li dir=3D"ltr" style=3D=
+"list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;color:rgb=
+(0,0,0);background-color:transparent;font-variant-numeric:normal;font-varia=
+nt-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline=
+;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;m=
+argin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11pt;backg=
+round-color:transparent;font-variant-numeric:normal;font-variant-east-asian=
+:normal;font-variant-alternates:normal;vertical-align:baseline">YP 4.0.26 B=
+uild Date 2025-04-07</span><span style=3D"font-size:11pt;background-color:t=
+ransparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-=
+variant-alternates:normal;vertical-align:baseline"><span class=3D"gmail-App=
+le-tab-span" style=3D"text-wrap-mode: nowrap;">	</span></span></p></li><li =
+dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,=
+sans-serif;color:rgb(0,0,0);background-color:transparent;font-variant-numer=
+ic:normal;font-variant-east-asian:normal;font-variant-alternates:normal;ver=
+tical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1=
+.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"=
+font-size:11pt;background-color:transparent;font-variant-numeric:normal;fon=
+t-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:b=
+aseline">YP 4.0.26 Release Date 2025-04-18</span></p></li><li dir=3D"ltr" s=
+tyle=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-serif;co=
+lor:rgb(0,0,0);background-color:transparent;font-variant-numeric:normal;fon=
+t-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:b=
+aseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;margin-to=
+p:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-size:11p=
+t;background-color:transparent;font-variant-numeric:normal;font-variant-eas=
+t-asian:normal;font-variant-alternates:normal;vertical-align:baseline">YP 5=
+.0.9 Build Date 2025-04-21</span><span style=3D"font-size:11pt;background-c=
+olor:transparent;font-variant-numeric:normal;font-variant-east-asian:normal=
+;font-variant-alternates:normal;vertical-align:baseline"><span class=3D"gma=
+il-Apple-tab-span" style=3D"text-wrap-mode: nowrap;">	</span></span></p></l=
+i><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:=
+Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-variant=
+-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:norm=
+al;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-he=
+ight:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span sty=
+le=3D"font-size:11pt;background-color:transparent;font-variant-numeric:norm=
+al;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-a=
+lign:baseline">YP 5.0.9 Release Date 2025-05-02</span></p></li><li dir=3D"l=
+tr" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,sans-ser=
+if;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:norma=
+l;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-al=
+ign:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1.38;marg=
+in-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"font-siz=
+e:11pt;background-color:transparent;font-variant-numeric:normal;font-varian=
+t-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline"=
+>YP 4.0.27 Build Date 2025-05-19</span><span style=3D"font-size:11pt;backgr=
+ound-color:transparent;font-variant-numeric:normal;font-variant-east-asian:=
+normal;font-variant-alternates:normal;vertical-align:baseline"><span class=
 =3D"gmail-Apple-tab-span" style=3D"text-wrap-mode: nowrap;">	</span></span>=
 </p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-=
 family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-=
@@ -1239,40 +1228,78 @@ es:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"=
 line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><s=
 pan style=3D"font-size:11pt;background-color:transparent;font-variant-numer=
 ic:normal;font-variant-east-asian:normal;font-variant-alternates:normal;ver=
-tical-align:baseline">YP 4.0.28 Release Date 2025-07-11</span></p></li></ul=
+tical-align:baseline">YP 4.0.27 Release Date 2025-05-30</span></p></li><li =
+dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family:Arial,=
+sans-serif;color:rgb(0,0,0);background-color:transparent;font-variant-numer=
+ic:normal;font-variant-east-asian:normal;font-variant-alternates:normal;ver=
+tical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-height:1=
+.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span style=3D"=
+font-size:11pt;background-color:transparent;font-variant-numeric:normal;fon=
+t-variant-east-asian:normal;font-variant-alternates:normal;vertical-align:b=
+aseline">YP 5.0.10 Build Date 2025-06-02</span><span style=3D"font-size:11p=
+t;background-color:transparent;font-variant-numeric:normal;font-variant-eas=
+t-asian:normal;font-variant-alternates:normal;vertical-align:baseline"><spa=
+n class=3D"gmail-Apple-tab-span" style=3D"text-wrap-mode: nowrap;">	</span>=
+</span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11p=
+t;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:transparen=
+t;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-a=
+lternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" st=
+yle=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentat=
+ion"><span style=3D"font-size:11pt;background-color:transparent;font-varian=
+t-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:nor=
+mal;vertical-align:baseline">YP 5.0.10 Release Date 2025-06-13</span></p></=
+li><li dir=3D"ltr" style=3D"list-style-type:disc;font-size:11pt;font-family=
+:Arial,sans-serif;color:rgb(0,0,0);background-color:transparent;font-varian=
+t-numeric:normal;font-variant-east-asian:normal;font-variant-alternates:nor=
+mal;vertical-align:baseline;white-space:pre"><p dir=3D"ltr" style=3D"line-h=
+eight:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"presentation"><span st=
+yle=3D"font-size:11pt;background-color:transparent;font-variant-numeric:nor=
+mal;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-=
+align:baseline">YP 4.0.28 Build Date 2025-06-30</span><span style=3D"font-s=
+ize:11pt;background-color:transparent;font-variant-numeric:normal;font-vari=
+ant-east-asian:normal;font-variant-alternates:normal;vertical-align:baselin=
+e"><span class=3D"gmail-Apple-tab-span" style=3D"text-wrap-mode: nowrap;">	=
+</span></span></p></li><li dir=3D"ltr" style=3D"list-style-type:disc;font-s=
+ize:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);background-color:tra=
+nsparent;font-variant-numeric:normal;font-variant-east-asian:normal;font-va=
+riant-alternates:normal;vertical-align:baseline;white-space:pre"><p dir=3D"=
+ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt" role=3D"pr=
+esentation"><span style=3D"font-size:11pt;background-color:transparent;font=
+-variant-numeric:normal;font-variant-east-asian:normal;font-variant-alterna=
+tes:normal;vertical-align:baseline">YP 4.0.28 Release Date 2025-07-11</span=
+></p></li></ul><br><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;=
+margin-bottom:0pt"><span style=3D"font-size:11pt;font-family:Arial,sans-ser=
+if;color:rgb(0,0,0);background-color:transparent;font-variant-numeric:norma=
+l;font-variant-east-asian:normal;font-variant-alternates:normal;vertical-al=
+ign:baseline">The Yocto Project=E2=80=99s technical governance is through i=
+ts Technical Steering Committee, more information is available at:</span></=
+p><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt=
+"><a href=3D"https://wiki.yoctoproject.org/wiki/TSC" style=3D"text-decorati=
+on-line:none"><span style=3D"font-size:11pt;font-family:Arial,sans-serif;ba=
+ckground-color:transparent;font-variant-numeric:normal;font-variant-east-as=
+ian:normal;font-variant-alternates:normal;text-decoration-line:underline;ve=
+rtical-align:baseline">https://wiki.yoctoproject.org/wiki/TSC</span></a></p=
 ><br><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:=
 0pt"><span style=3D"font-size:11pt;font-family:Arial,sans-serif;color:rgb(0=
 ,0,0);background-color:transparent;font-variant-numeric:normal;font-variant=
 -east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">=
-The Yocto Project=E2=80=99s technical governance is through its Technical S=
-teering Committee, more information is available at:</span></p><p dir=3D"lt=
-r" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt"><a href=3D"h=
-ttps://wiki.yoctoproject.org/wiki/TSC" style=3D"text-decoration-line:none">=
-<span style=3D"font-size:11pt;font-family:Arial,sans-serif;background-color=
-:transparent;font-variant-numeric:normal;font-variant-east-asian:normal;fon=
-t-variant-alternates:normal;text-decoration-line:underline;vertical-align:b=
-aseline">https://wiki.yoctoproject.org/wiki/TSC</span></a></p><br><p dir=3D=
-"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt"><span sty=
-le=3D"font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);backgrou=
-nd-color:transparent;font-variant-numeric:normal;font-variant-east-asian:no=
-rmal;font-variant-alternates:normal;vertical-align:baseline">The Status rep=
-orts are now stored on the wiki at: </span><a href=3D"https://wiki.yoctopro=
-ject.org/wiki/Weekly_Status" style=3D"text-decoration-line:none"><span styl=
-e=3D"font-size:11pt;font-family:Arial,sans-serif;background-color:transpare=
-nt;font-variant-numeric:normal;font-variant-east-asian:normal;font-variant-=
-alternates:normal;text-decoration-line:underline;vertical-align:baseline">h=
-ttps://wiki.yoctoproject.org/wiki/Weekly_Status</span></a></p><br><p dir=3D=
-"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:0pt"><span sty=
-le=3D"font-size:11pt;font-family:Arial,sans-serif;color:rgb(0,0,0);backgrou=
-nd-color:transparent;font-variant-numeric:normal;font-variant-east-asian:no=
-rmal;font-variant-alternates:normal;vertical-align:baseline">[If anyone has=
- suggestions for other information you=E2=80=99d like to see on this weekly=
- status update, let us know!]</span></p></span><br class=3D"gmail-Apple-int=
-erchange-newline"><div dir=3D"ltr" class=3D"gmail_signature" data-smartmail=
-=3D"gmail_signature"><div dir=3D"ltr"><div dir=3D"ltr"><p class=3D"MsoNorma=
-l" style=3D"background-image:initial;background-position:initial;background=
--repeat:initial"><span style=3D"font-size:12pt;font-family:Arial,sans-serif=
-">Thanks,<span></span></span></p>
+The Status reports are now stored on the wiki at: </span><a href=3D"https:/=
+/wiki.yoctoproject.org/wiki/Weekly_Status" style=3D"text-decoration-line:no=
+ne"><span style=3D"font-size:11pt;font-family:Arial,sans-serif;background-c=
+olor:transparent;font-variant-numeric:normal;font-variant-east-asian:normal=
+;font-variant-alternates:normal;text-decoration-line:underline;vertical-ali=
+gn:baseline">https://wiki.yoctoproject.org/wiki/Weekly_Status</span></a></p=
+><br><p dir=3D"ltr" style=3D"line-height:1.38;margin-top:0pt;margin-bottom:=
+0pt"><span style=3D"font-size:11pt;font-family:Arial,sans-serif;color:rgb(0=
+,0,0);background-color:transparent;font-variant-numeric:normal;font-variant=
+-east-asian:normal;font-variant-alternates:normal;vertical-align:baseline">=
+[If anyone has suggestions for other information you=E2=80=99d like to see =
+on this weekly status update, let us know!]</span></p></span><br class=3D"g=
+mail-Apple-interchange-newline"><div dir=3D"ltr" class=3D"gmail_signature" =
+data-smartmail=3D"gmail_signature"><div dir=3D"ltr"><div dir=3D"ltr"><p cla=
+ss=3D"MsoNormal" style=3D"background-image:initial;background-position:init=
+ial;background-repeat:initial"><span style=3D"font-size:12pt;font-family:Ar=
+ial,sans-serif">Thanks,<span></span></span></p>
 
 <p class=3D"MsoNormal" style=3D"background-image:initial;background-positio=
 n:initial;background-repeat:initial"><span style=3D"font-size:12pt;font-fam=
@@ -1314,5 +1341,5 @@ phen.k.jolley@intel.com" target=3D"_blank">s</a><a href=3D"mailto:jolley.yp=
 .pm@gmail.com" target=3D"_blank">jolley.yp.pm@gmail.com</a></span></span></=
 u></p></div></div></div></div>
 
---000000000000dc1663062511f1df--
+--0000000000005e60f506259e9eec--
 
