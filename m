@@ -2,77 +2,76 @@ Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07551E909D0
-	for <webhook@archiver.kernel.org>; Tue, 17 Feb 2026 15:52:58 +0000 (UTC)
-Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.15165.1771343568243010642
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E9EF3C99C
+	for <webhook@archiver.kernel.org>; Tue, 24 Feb 2026 15:28:54 +0000 (UTC)
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.22787.1771946926549570388
  for <yocto-status@lists.yoctoproject.org>;
- Tue, 17 Feb 2026 07:52:48 -0800
+ Tue, 24 Feb 2026 07:28:46 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm2 header.b=D5JEmzfZ;
- dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=g9NMQ2Rw;
- spf=pass (domain: pbarker.dev, ip: 103.168.172.146, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.phl.internal (Postfix) with ESMTP id 67175EC0018;
-	Tue, 17 Feb 2026 10:52:47 -0500 (EST)
+ dkim=pass header.i=@pbarker.dev header.s=fm2 header.b=b4cklXXO;
+ dkim=pass header.i=@messagingengine.com header.s=fm3 header.b=syNUsDlQ;
+ spf=pass (domain: pbarker.dev, ip: 103.168.172.154, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 661FD1400168;
+	Tue, 24 Feb 2026 10:28:44 -0500 (EST)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Tue, 17 Feb 2026 10:52:47 -0500
+  by phl-compute-08.internal (MEProxy); Tue, 24 Feb 2026 10:28:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
 	cc:content-type:content-type:date:date:from:from:in-reply-to
 	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm2;
-	 t=1771343567; x=1771429967; bh=guD6V+FlcBFda/3ya97uP5oehRMz3xo3
-	s2vy3yJW+YY=; b=D5JEmzfZ6+nY+vYU3JAa5yX/YhjsC4sYRSQ2Jg9ovy/aTFeR
-	JNYMsXSoL7mEehN17x846M4avf+pSN+aqheJFvWp/1MZlPj6vzV0dxp+xmSwAmyc
-	XvqhgzB3sfc7g0v7IURs6jknDSlZrN+e8Guaif1YY5Lgea88Fj1/jzZHuK7Vsivc
-	2d/cxphiWo+utkEmmDEl08KHOsfC/R+bnVnKkoLw+lvaHap1AbI98d9zOYmYEyAW
-	5wpxwxybkR7/N3ryTC38biPMFPLTCxXX/udqnSACj0yEkqS744RFv5B1kMtNpWig
-	u/0RllBWIPJD95tiKP/EejR9Glr14/oqATlWhQ==
+	 t=1771946924; x=1772033324; bh=Mb8oGBiIo7QtsofO/AuH1wXYFcbt+ioo
+	Eh1evXhU+D0=; b=b4cklXXOgmfvHtZjprInSwK/5pEcTsIlQtACYpgZF56reikj
+	HSKB8AQyS+vmrsgUBttAPr2tsDuAC+/gw8vTM8T3ehqF9az/Z9f2eFMMXapoeCpb
+	sazxTjoKtrl0KGsoMq7PztnTZBAakfbAhDg7FSQd57PAZssJqooN2nTdlFlZ1Akv
+	Vc5gMiaw7WNKvUKw8SB/y0JSTaZIpmNUTVuPGTbxN3uvB95hDASyziaMEHNjdXyf
+	YpPAgrfhA6YRUV4vcgoEdJi5I77TM3l9VEtDt+d1zY3INqz+TJmAV5iO+Wivl66r
+	PtJxnkuUwvn6lPpY0Om8x4wwi+ZzfP4q2UEx+A==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:message-id
 	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1771343567; x=
-	1771429967; bh=guD6V+FlcBFda/3ya97uP5oehRMz3xo3s2vy3yJW+YY=; b=g
-	9NMQ2RwS9jmdi+HJwjrgwd6yz7sbMgcxtjVsLEPIdyfPlDhsHzWCGK7LXsMKoKRt
-	Qd6hnkmmq1wgCc/JMqhwvThI8k/yBlEuodPany598i+cvlw3t/GRQRLDofYXfZqn
-	G0qOKr5zYff7Wak1nLgGIw4ytOpHI0LfnEt0cTvs0PSGAr0LuaZhIIbW8D+BiEGW
-	uc2/JQmuI6o91/IAJ8UsBfKf2TYWmTuxwL2oxf+Ws2rJ/0I6WVVVHRief5Cg8B3h
-	kz+jdnmSHDnz0su3BkCAlwT7RflOgIu85TGeSqTHzlpNZ2xHT2TMwSc2+qhbNdC8
-	hGS/pqfh6KMg4W1sCPtGg==
-X-ME-Sender: <xms:z46UaYVmVGapzn5bikTZWCUauFQManG080PhGmQ4td_x2dm9cAUMnQ>
-    <xme:z46UaVh-o0I4ZyMvuWdxGTKM2z7brWlu9N0ad2M0JDryEX2R5Aw7hBxESiX7OffQV
-    Wt3sjee-igV1lQw-C2DxULHYeouLQSpacpkbCo7GbbCkxkAWxhH97w>
-X-ME-Received: <xmr:z46UaX8jeWL6RAOyXN-P9w-cw1fx9Bg6jlIUSnZHy-a4ig_FDSQoVgb60vXKaptQ05ezYL3Te5IHKYfv71eF_peVakdEZI2acqer1Uj6RlQH>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvvddtudejucetufdoteggodetrf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1771946924; x=
+	1772033324; bh=Mb8oGBiIo7QtsofO/AuH1wXYFcbt+iooEh1evXhU+D0=; b=s
+	yNUsDlQV821U3Jwwxs5RcBmkTlhKEVbLqSzcdZcx550inbtNzGsei0OiCcdX5jWy
+	IKo64EDHu3gtqn4UBLWQnfIe6ByUJA7goxZKLBg03cm8RD3M0dQt/WUtUO+nlhWD
+	kFU0bjPaLrRI5QnjBrDYcb5UmjaM/+N0+KMj5QeuV9Sr1OBSaG5WMKysCA5Ub8A4
+	B88LSLE45XeeMXKtSz4ko4SGNfoD8y6nRoJOm/tU+ne1a+ovDeX4ibVR7t5AvJxO
+	mITdNM1HodUDHbie63Qg1Ij5cn4xwkimQiaLxEpSVL50ae4oIm87GlWituh/ktDr
+	jpCE7XZr/oXQWKKrWvI+g==
+X-ME-Sender: <xms:rMOdadKNHOoV61mWw0LFNhpUFEot9CCD2IC1SjW1It22jqRYiZfEPQ>
+    <xme:rMOdaUlcwX1Z3W_kodsMuMkADP0tQWFHnvxtp8_DSknCNjClsGZEU2zzaCmhN2FgH
+    _CyJOugahatyL2MzrlzuVFbUZ7XbGtKoSosOrqSQ2oZhfnIbJGlU58k>
+X-ME-Received: <xmr:rMOdaZP0dC0D94qrXt1Mpx2qYl1vK6TChh0jmqiSeL0T1fNs-s_zfY4UKWaFoYaYIDchQOS-yMTrbmo57wY42bfumatQ3rAKSIawvQ_AkoDu>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddvgedtheefucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
     rghilhhouhhtmecufedttdenucgoufhushhpvggtthffohhmrghinhculdegledmnecujf
     gurhepkffuhffvffgtfgggsehgtderredtreejnecuhfhrohhmpefrrghulhcuuegrrhhk
-    vghruceophgruhhlsehpsggrrhhkvghrrdguvghvqeenucggtffrrghtthgvrhhnpeduve
-    elleefgfeuudejheefjeetkeejgffhkefftefgieekgfehhedulefhiefgtdenucffohhm
-    rghinhepiihoohhmrdhushdphihotghtohhprhhojhgvtghtrdhorhhgpdhophgvnhgvmh
-    gsvgguuggvugdrohhrghdphihotghtohdrihhopdhgohhoghhlvgdrtghomhenucevlhhu
+    vghruceophgruhhlsehpsggrrhhkvghrrdguvghvqeenucggtffrrghtthgvrhhnpeefue
+    dvleduvdejvdeuiedviedtjeeludfgleffteelhffgkeefvdelfedvvdeitdenucffohhm
+    rghinhepiihoohhmrdhushdphihotghtohhprhhojhgvtghtrdhorhhgpdihohgtthhord
+    hiohdpohhpvghnvghmsggvugguvggurdhorhhgpdhgohhoghhlvgdrtghomhenucevlhhu
     shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehprghulhesphgsrg
-    hrkhgvrhdruggvvhdpnhgspghrtghpthhtohephedpmhhouggvpehsmhhtphhouhhtpdhr
+    hrkhgvrhdruggvvhdpnhgspghrtghpthhtohepgedpmhhouggvpehsmhhtphhouhhtpdhr
     tghpthhtohephihotghtoheslhhishhtshdrhihotghtohhprhhojhgvtghtrdhorhhgpd
     hrtghpthhtohepohhpvghnvghmsggvugguvgguqdgtohhrvgeslhhishhtshdrohhpvghn
     vghmsggvugguvggurdhorhhgpdhrtghpthhtohephihotghtohdqshhtrghtuhhssehlih
     hsthhsrdihohgtthhophhrohhjvggtthdrohhrghdprhgtphhtthhopehsjhholhhlvgih
-    rdihphdrphhmsehgmhgrihhlrdgtohhmpdhrtghpthhtohepphgruhhlsehpsggrrhhkvg
-    hrrdguvghv
-X-ME-Proxy: <xmx:z46UaXZ4_ZVXjxBQNY3v8PDwMLSILHOcchqdUO-FIaSguHUL5GvgyQ>
-    <xmx:z46Uae2osUBHFPHeSf95BnwqkKsBp5hCzSLch8fL8KFEOLDqtIUz6Q>
-    <xmx:z46UaaZK00068_LOmnO1e3mlE1xvitkmw6FgMMnxyNOlOic5_vUx_w>
-    <xmx:z46UaeK7hSNybY2iO5VgtlEI8kfv3xliNI7GxqmrA-RD7U5CErz0WA>
-    <xmx:z46UaX_9pCbsiznZ_wQlfISZuxBcbGj9g_VPye1vCvK_BoTgwnlZo-1_>
+    rdihphdrphhmsehgmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:rMOdaS0bOXsZdTxJI2dTUyAt21U1fABYQkY4TujwPjyitrVueVZ6WQ>
+    <xmx:rMOdaQmTSXwZmShNXpuFww8Rq1Hvhtd94S_uW8q80v54oqi_0jiR_g>
+    <xmx:rMOdaRXbWuWWUVDklRZMFXVahDwP7amTtH7X79qb3UtjlHwNW7aIjQ>
+    <xmx:rMOdaevi9apg5Qn9o1-Q387ev3ueARzLJtpeF5B2CFKZiL6lzTk3PA>
+    <xmx:rMOdaedZcyh-i9v_LeyKVJAEcCVs28ZyOcwzPdcPyEuljCIKmWKVQh-q>
 Feedback-ID: i51494658:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 17 Feb 2026 10:52:46 -0500 (EST)
-Message-ID: <207c307fe05f93e3f12a39fb93dab0cbdd77b6bf.camel@pbarker.dev>
-Subject: Yocto Project Status 17 February 2026 (WW08)
+ 24 Feb 2026 10:28:43 -0500 (EST)
+Message-ID: <c63eaa63b1ceb0f3a78148a6594152889ab9dabc.camel@pbarker.dev>
+Subject: Yocto Project Status 24 February 2026 (WW09)
 From: Paul Barker <paul@pbarker.dev>
 To: yocto@lists.yoctoproject.org, openembedded-core@lists.openembedded.org, 
 	yocto-status@lists.yoctoproject.org
-Date: Tue, 17 Feb 2026 15:52:42 +0000
+Date: Tue, 24 Feb 2026 15:28:39 +0000
 Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  keydata=mQINBGC756sBEADXL6cawsZRrDvICz9Y1SG0/lW1me4xpq36obh7a0IGAzp3ywNRb/4MO
  DTqP4+DD0cIFuDY41/N17g0sNlp8z+/k/IIDmNPtYQOTVmAkrkdDU4BP8dD3Cp1PUw6nrbInfujAJ
@@ -118,17 +117,17 @@ Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  ChZPI3NMLnKZPJC8ZQZ4S8yb5oA3rqTA2DMODvsrEVlaB2cQ6IWHSa/mvBwA8Ias3771cp4fZS7W7
  LUewj8JVy0aJsGTwI4invl
 Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-kWLtrU5RBeFnS0D1ugBg"
+	protocol="application/pgp-signature"; boundary="=-/KU88/im0rFsW6Mzlx2d"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
 List-Id: <yocto-status.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <yocto-status@lists.yoctoproject.org>; Tue, 17 Feb 2026 15:52:58 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/yocto-status/message/103
+ <yocto-status@lists.yoctoproject.org>; Tue, 24 Feb 2026 15:28:54 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/yocto-status/message/104
 
 
---=-kWLtrU5RBeFnS0D1ugBg
+--=-/KU88/im0rFsW6Mzlx2d
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -138,53 +137,55 @@ Current Dev Position: YP 6.0 M2
 Next Deadline: YP 6.0 M2 Build Date 2026-02-16
 
 Next Team Meetings:
-- Bug Triage meeting - Thursday 19th Feb. 7:30am PDT
+- Bug Triage meeting - Thursday 26th Feb. 7:30am PDT
   (https://zoom.us/j/454367603?pwd=3DZGxoa2ZXL3FkM3Y0bFd5aVpHVVZ6dz09)
-- Weekly Project Engineering Sync  - Tuesday 17th Feb. 8am PDT
+- Weekly Project Engineering Sync  - Tuesday 24th Feb. 8am PDT
   (https://zoom.us/j/990892712?pwd=3DcHU1MjhoM2x6ck81bkcrYjRrcmJsUT09)
-- Yocto Project Patch Review - Thursday 19th Feb. 10am GMT and Monday 23rd =
-Feb. 9am PDT
+- Yocto Project Patch Review - Thursday 26th Feb. 10am GMT and Monday 2nd M=
+ar. 9am
   (https://zoom.us/j/97762397148?pwd=3D1xk0iC9hp9SjEonaTaONwTb6iWry4Eb.1)
 
 Project data dashboard: https://dashboard.yoctoproject.org/=20
 
 Key Status/Updates:
-- YP 4.0.33 is awaiting approval
+- YP 4.0.33 is due for release
 - YP 5.0.16 is in QA
-- YP 6.0 M2 is due to build this week but is blocked by high priority
-  bugs
-- There are currently 5 high open bugs, which will block M2. Three have
-  line of sight to being resolved:
-    - rust do_test_compile/do_install segfault (#16058)
-    - Generation of releases.json needs updating (#16138)
-    - AB-INT: do_image_wic: tar command return exit status 2 (#16143)
-- Two are currently needing further work:=20
-    - x86 kvm broken on Fedora 43 (#16074)
-    - AB-INT: opkg-build segmentation fault (#16078)
-- We removed the bazaar, osc and cvs fetchers since they are obsolete
-  and nobody should be using them
-- We removed sysvinit compatibility support from systemd images since
-  this will not be supported by upstream during the lifespan of our
-  upcoming LTS release.
-- We removed legacy tls support from openssl in the interests of
-  providing better secure defaults.
+- YP 5.2.3 is queued for QA
+- YP 6.0 M2 is due to build when we have patches merged
+- We have two open high issues which need further work that will block M3:=
+=20
+    - x86 kvm broken on Fedora 43 (cpu features issue?) (#16074)
+    - AB-INT: opkg-build segmentation fault (memory corruption in
+      pseudo?) (#16078)
+- We also have issues we need to resolve before release:
+    - Allowing non-destructive git fetcher updates for bitbake-setup
+    - Splitting wic into an external tool
+    - Kernel rust support
+    - Switching to pkg-config
+    - Deprecation of ltp (upstream dropped runltp and mandate kirk)
+    - How to improve DEBUG_BUILD?
+    - DISTRO_FEATURES changes to =E2=80=98nodistro=E2=80=99 in OE-Core
+    - SBOM/cve-check changes
+- We updated =E2=80=9Cnodistro=E2=80=9D to use 3 of the include files poky =
+was already
+  using:
+    - Space optimization to reduce build footprint and sstate object
+      size
+    - Disabling most static libraries by default (build size/speed wins)
+    - Enabling security flags by default
+- =E2=80=9Cnodistro=E2=80=9D now also enables uninative by default to allow=
+ for better
+  CDN sstate reuse
+- Distros now need to use INIT_MANAGER to select their preferred init
+  system with the default being systemd for =E2=80=9Cnodistro=E2=80=9D. Pok=
+y=E2=80=99s defaults
+  remain unchanged and we don=E2=80=99t have plans to change this at this t=
+ime
+  due to the work involved and impact (e.g test result comparisons).
 - The number of intermittent failures affecting builds, both stable and
   development, continues to be problematic - we continue to prioritise
   addressing these since any given build is now statistically likely to
   hit one or more of them.
-- Patch review is now using two branches:
-    - =E2=80=9Cmaster-review=E2=80=9D  - patches which pass on the autobuil=
-der and will
-      be discussed on the patch review call
-      (https://git.openembedded.org/openembedded-core-contrib/log/?h=3Dmast=
-er-review)
-    - =E2=80=9Cmaster-backlog=E2=80=9D - patches which have been discussed =
-and need
-      further investigation or more detailed feedback which we haven=E2=80=
-=99t
-      had time for yet
-      (https://git.openembedded.org/openembedded-core-contrib/log/?h=3Dmast=
-er-backlog)
 - Patches are merging but there is a backlog and we=E2=80=99ve had to prior=
 itize
   simpler changes. We continue to struggle for bandwidth for changes
@@ -233,7 +234,6 @@ YP 6.0 Milestone Dates:
 
 Upcoming dot releases:
 - YP 5.0.16 Release Date 2026-02-20
-- YP 5.3.2 Build Date 2026-02-16
 - YP 5.3.2 Release Date 2026-02-27
 - YP 4.0.34 Build Date 2026-02-23
 - YP 4.0.34 Release Date 2026-03-06
@@ -267,17 +267,17 @@ Best regards,
 Paul Barker
 
 
---=-kWLtrU5RBeFnS0D1ugBg
+--=-/KU88/im0rFsW6Mzlx2d
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaZSOyhEccGF1bEBwYmFy
-a2VyLmRldgAKCRCrY1Tsnbr0bvMqAP9cV6jQ18YpjJqqSEGCMOW7Yr+MQseALWtz
-nqudAjjz/gD/fl4OBH069m6aRcuotE9bqi4QWvBfh2QBIvYqq5ohpgU=
-=IA5m
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCaZ3DpxEccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0bvXiAPwKLv4CsjhZKxbUchr4BpAD3eVE9pwKDfGg
+dNEKjVbscwD+P1ESJ7tyUJeH6OnGIsvRCtHVRMnG+A6ifGDWvHWebwY=
+=4uX3
 -----END PGP SIGNATURE-----
 
---=-kWLtrU5RBeFnS0D1ugBg--
+--=-/KU88/im0rFsW6Mzlx2d--
 
