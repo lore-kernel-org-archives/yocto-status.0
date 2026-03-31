@@ -2,79 +2,82 @@ Return-Path: <paul@pbarker.dev>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76190109B48F
-	for <webhook@archiver.kernel.org>; Tue, 31 Mar 2026 15:31:54 +0000 (UTC)
-Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
- by mx.groups.io with SMTP id smtpd.msgproc02-g2.23090.1774971112797023747
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA6B10F9302
+	for <webhook@archiver.kernel.org>; Tue, 31 Mar 2026 20:46:13 +0000 (UTC)
+Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+ by mx.groups.io with SMTP id smtpd.msgproc02-g2.1203.1774989971662034019
  for <yocto-status@lists.yoctoproject.org>;
- Tue, 31 Mar 2026 08:31:53 -0700
+ Tue, 31 Mar 2026 13:46:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=m7K58qhK;
- dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=Uy93zLli;
- spf=pass (domain: pbarker.dev, ip: 202.12.124.146, mailfrom: paul@pbarker.dev)
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id 057C51D00053;
-	Tue, 31 Mar 2026 11:31:51 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Tue, 31 Mar 2026 11:31:52 -0400
+ dkim=pass header.i=@pbarker.dev header.s=fm3 header.b=KS6aDtk3;
+ dkim=pass header.i=@messagingengine.com header.s=fm2 header.b=ERsCRDLr;
+ spf=pass (domain: pbarker.dev, ip: 103.168.172.150, mailfrom: paul@pbarker.dev)
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id D2717EC026C;
+	Tue, 31 Mar 2026 16:46:10 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Tue, 31 Mar 2026 16:46:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pbarker.dev; h=
-	cc:content-type:content-type:date:date:from:from:in-reply-to
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
 	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1774971111; x=1775057511; bh=6MBWCxAAT7
-	uC1QYrCVu9XffVWQR05J7vX5Act6FTIiE=; b=m7K58qhKnb2nG2cW5Eoo/OhZuB
-	3YOKgyDxRMjXhYj0WZIACFUp2/E0sSQOKRbF1ietB7rZQk+BvymCSEIYnJZt/sxP
-	cKTQyMTCM7hWcHwesbcX96oyUTAHCOlpjcOhtER6i2jO95ek/oQQZ3o5H/7lEXKB
-	WTFakwBOmME6WFaDno1Yjes6gTe/nDmLfau4zmzMJ7icLA2Hzk+0jgY+/tMWAN3s
-	YEfr0O20KX9No3dEDZ0bGohijfNa12iR/RVkwVi0XuaJXFTjJDpj2No5uwA6/TYu
-	2j36NtbP4JCaohfti98XcaTkDYKCcAwmwAEnv6GZL1oboYWnkakxegbfrrEg==
+	:subject:to:to; s=fm3; t=1774989970; x=1775076370; bh=sssF3oi12k
+	Ow+6JCzxXpj1J0Ra7MpQpn+0UZdNFd0Fk=; b=KS6aDtk3BdmDg7AgwnqLwcSUaN
+	pecY/DIt/bgbWX0OTg0qeOdTlJNd8KztUdKAjWGamtwPbiz6VxXzB18DUYlu4f51
+	/C7d6bPXM7I85ZxjWjRovy4vAdjrX1p2kMaoFs4Z4jY0txL84F4ynBGdGPCsCV8I
+	3m7MQvVW2FdFPJLanlmdNS00rCcRt7TqZCm+lFuSW464miK9CBMr6I71uNRSApFq
+	NWrJp54YgfsvvYwW/FPM548RtF7et5pulHXfOentPNh76Pg1MpqQXGJT1iZc4Ojw
+	M2XldWPZTgccoInBOParq2su1bt/w9ESbW/gvWKk7i6lMP0QqjE9HDHIwKFA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:content-type:date:date
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
 	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
 	:message-id:mime-version:references:reply-to:subject:subject:to
 	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1774971111; x=1775057511; bh=6MBWCxAAT7uC1QYrCVu9XffVWQR05J7vX5A
-	ct6FTIiE=; b=Uy93zLlivauH3lW6F3q/0IbC57hD+ua/XpsxRwQQvAvjDCMrTN6
-	/v2NDljtSxgqx41AXdyne9cQTOgZGB5sPUok8KA8Rm1E/VzIevYlutWZKtUAyUTb
-	yWe12YJx0tDAfUwt9maByfXlXK4i/m6fMH/gxIyunB8YCriwW5KefPvUNA1rxehD
-	bOVrNI0SQplaVOx9F6kJukLoBnsahq8AHpmptkWas5DOujCDh7oHZrZx/SpYCS9g
-	VlFjJZlGRAhYoLwdjkaJLzCiih8fuoUzj13P8xhepycLigdScQ1xoRykX8OfnRuo
-	CGG4NbgLOK/9gf1MDQc+nPonV4HRWZE0r3w==
-X-ME-Sender: <xms:5-jLaWMu_xwmGmIn4A9PMZMioCJg_UPbTq52gPUvxfuAebohFunLEA>
-    <xme:5-jLaQYALogg3LjUgwzbtBcc4LnQ1AB3E5_RdxzF2sIsX8asTN8ZBrm7jjzZgoY54
-    dhEJsh3aabZOM4WvuGr2ZCLtDFTJEeWjGORWygmAAcx-xrpP_TvG4Iu>
-X-ME-Received: <xmr:5-jLaQx6DhG8AB3O2imTbnH0pIxoVcCCT2qp4o2bM5pp-I5yRmuSdUtQEM2hYH_oMhSpfNtyuhejSDuwX2gqoPBLIvrAxHoLUTtZzbU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdehjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegrihhl
-    ohhuthemuceftddtnecunecujfgurhepkffuhffvffgjfhgtfgggsehgtderredtreejne
-    cuhfhrohhmpefrrghulhcuuegrrhhkvghruceophgruhhlsehpsggrrhhkvghrrdguvghv
-    qeenucggtffrrghtthgvrhhnpeetjeekueeghfeiudegieehgefhgfffgfehhfdutdfffe
-    fgtdehleetjefgieeuhfenucffohhmrghinhephihotghtohhprhhojhgvtghtrdhorhhg
-    pdiiohhomhdruhhsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepphgruhhlsehpsggrrhhkvghrrdguvghvpdhnsggprhgtphhtthhopeegpdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopeihohgtthhosehlihhsthhsrdihohgtth
-    hophhrohhjvggtthdrohhrghdprhgtphhtthhopehsjhholhhlvgihrdihphdrphhmsehg
-    mhgrihhlrdgtohhmpdhrtghpthhtohepohhpvghnvghmsggvugguvgguqdgtohhrvgeslh
-    hishhtshdrohhpvghnvghmsggvugguvggurdhorhhgpdhrtghpthhtohephihotghtohdq
-    shhtrghtuhhssehlihhsthhsrdihohgtthhophhrohhjvggtthdrohhrgh
-X-ME-Proxy: <xmx:5-jLabKlDUvPSLnf4VJWHmOx21SeJKxnaJMBIMIB85v9YvClAZRyfA>
-    <xmx:5-jLaaoL2PYD8QGDnG41_a_OEB4asQM4aNoKxRMBKMns8frlk1tqmQ>
-    <xmx:5-jLaaLd0OYYi3KV4voIkWdsfMY2SxNfxZzhlpQjuFUbBQq_kyXIqQ>
-    <xmx:5-jLafSme_CC-UUcUQYldjOas3pFVUoXE6P5036SOd0sozSDrqRx_A>
-    <xmx:5-jLaWwNJ13w4ltzThZJ15Ep8Ej9O9SHptZuBv7eLKnyqbhHllF3x8Gz>
+	1774989970; x=1775076370; bh=sssF3oi12kOw+6JCzxXpj1J0Ra7MpQpn+0U
+	ZdNFd0Fk=; b=ERsCRDLrooK2uGwac+dExNoiSwcWjJVwLvYuyRQkGJRM7pajq+5
+	oKAPCB43+RkEijLngwrRuTVh9UzTUdWOdSvpUuMynOa8PrXhBsi7mKXGekUeeYng
+	VLmVNh0+l+ZQAwfkMGts5ruu1uiSZTk0h/ugOkBv5HD8ydxd8oSoxLnalIlocVIv
+	SBBLJgHCTXrsu/2p1wNvOS4B5j7geZtgOiRYkrAJG0J0LSY3zOotxGD3yfvuvmcR
+	5lMh44V1qFEBGitAHnJJ2Fe6AYCBQcqPiLuf+OjCfjm7HCCUYwnznCwhAbwS4eHU
+	RTnMb+DmK8IkvUY0+ElFavKCovYx8n+e9wQ==
+X-ME-Sender: <xms:kjLMaXlkvLGQCNnosAuaEhJyQG5a4QOxhn81amQBXhc_8M_-GdBNuA>
+    <xme:kjLMaTzXA4GXFBDvo50-GEH4NJu3a7giLlvFAHPRVTOP-JRLSR3yhpccECag_gjCQ
+    yILFugNzdI-5YsL2Ox2HtDCt34YyASZAM3biBTAV5tqi-Vb1Kxm5lY>
+X-ME-Received: <xmr:kjLMaZPUiytdl_Zd819E68w2wqkqQ2TsigctVHYt8cozjMjn5q_2pHudP8-dHjwq0tHrKfzTrZVa8H1YXzLL6_MeNbwmbvZKBYLbwoU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdduudelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucenucfjughrpefkuffhvfevffgjfhgtfgggsehgtderredtre
+    ejnecuhfhrohhmpefrrghulhcuuegrrhhkvghruceophgruhhlsehpsggrrhhkvghrrdgu
+    vghvqeenucggtffrrghtthgvrhhnpeejudefvdfhheevtdduledvleejieehieevffelhe
+    fffedtgfduvdevjeekheffhfenucffohhmrghinhephihotghtohhprhhojhgvtghtrdho
+    rhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepph
+    gruhhlsehpsggrrhhkvghrrdguvghvpdhnsggprhgtphhtthhopeehpdhmohguvgepshhm
+    thhpohhuthdprhgtphhtthhopeihohgtthhosehlihhsthhsrdihohgtthhophhrohhjvg
+    gtthdrohhrghdprhgtphhtthhopeifmhhinhgvrheslhhinhhugihfohhunhgurghtihho
+    nhdrohhrghdprhgtphhtthhopeihohgtthhoqdhsthgrthhusheslhhishhtshdrhihotg
+    htohhprhhojhgvtghtrdhorhhgpdhrtghpthhtohepshhjohhllhgvhidrhihprdhpmhes
+    ghhmrghilhdrtghomhdprhgtphhtthhopehophgvnhgvmhgsvgguuggvugdqtghorhgvse
+    hlihhsthhsrdhophgvnhgvmhgsvgguuggvugdrohhrgh
+X-ME-Proxy: <xmx:kjLMafrVepRQu9reaSDM_sDEc4yniWvTeQ6taRLPCpwWra8ib4Fg4A>
+    <xmx:kjLMaSESx-szr860pCk7BlwetwWxoq21BX6dYRwigoZYQmzShywloQ>
+    <xmx:kjLMacrNZXYaJTGHjlLPJOoBrqq53dcqhQVu6eOQEtQv2jRh1Y9nvQ>
+    <xmx:kjLMaTbq6Sj4_Su8NKBcKDIp5FxSQaXur7Br9S8yt_wXWxXwb20F6w>
+    <xmx:kjLMabc0p-TW5I5Q2ulTh85Xt9SfbvLHbubKsM5ZYMOJraHB9ga6Okn1>
 Feedback-ID: i51494658:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 31 Mar 2026 11:31:50 -0400 (EDT)
-Message-ID: <debd57881df9f7bb1681ff140d35869f81e17fcd.camel@pbarker.dev>
-Subject: Re: [yocto] Yocto Project Status 31 March 2026 (WW14)
+ 31 Mar 2026 16:46:09 -0400 (EDT)
+Message-ID: <2e1a0b2cc85c50c4f6090bcb4067c750a4a3b58c.camel@pbarker.dev>
+Subject: Re: [yocto-status] [yocto] Yocto Project Status 31 March 2026 (WW14)
 From: Paul Barker <paul@pbarker.dev>
-To: yocto@lists.yoctoproject.org, sjolley.yp.pm@gmail.com, 
- "openembedded-core@lists.openembedded.org"
-	 <openembedded-core@lists.openembedded.org>, 
+To: yocto@lists.yoctoproject.org, wminer@linuxfoundation.org, 
 	yocto-status@lists.yoctoproject.org
-Date: Tue, 31 Mar 2026 16:31:46 +0100
-In-Reply-To: <CAK5yBb-sFQWmxJHc2MPrSRMWhFRsMFUrm69vtT6FxNV8zL+Ktw@mail.gmail.com>
+Cc: sjolley.yp.pm@gmail.com, "openembedded-core@lists.openembedded.org"
+	 <openembedded-core@lists.openembedded.org>
+Date: Tue, 31 Mar 2026 21:46:05 +0100
+In-Reply-To: <CAC_dYdoTbrG-8f2tAYVa5DdHVWYCbr-RR2F13vdqjJwch=7-ow@mail.gmail.com>
 References: 
 	<CAK5yBb-sFQWmxJHc2MPrSRMWhFRsMFUrm69vtT6FxNV8zL+Ktw@mail.gmail.com>
+	 <debd57881df9f7bb1681ff140d35869f81e17fcd.camel@pbarker.dev>
+	 <CAC_dYdoTbrG-8f2tAYVa5DdHVWYCbr-RR2F13vdqjJwch=7-ow@mail.gmail.com>
 Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  keydata=mQINBGC756sBEADXL6cawsZRrDvICz9Y1SG0/lW1me4xpq36obh7a0IGAzp3ywNRb/4MO
  DTqP4+DD0cIFuDY41/N17g0sNlp8z+/k/IIDmNPtYQOTVmAkrkdDU4BP8dD3Cp1PUw6nrbInfujAJ
@@ -120,52 +123,29 @@ Autocrypt: addr=paul@pbarker.dev; prefer-encrypt=mutual;
  ChZPI3NMLnKZPJC8ZQZ4S8yb5oA3rqTA2DMODvsrEVlaB2cQ6IWHSa/mvBwA8Ias3771cp4fZS7W7
  LUewj8JVy0aJsGTwI4invl
 Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-uX3hrPDd/Y8MKvoW4LJr"
+	protocol="application/pgp-signature"; boundary="=-2IQXJBb0O1n1crvMRhkm"
 User-Agent: Evolution 3.52.3-0ubuntu1.1 
 MIME-Version: 1.0
 List-Id: <yocto-status.lists.yoctoproject.org>
 X-Webhook-Received: from 45-33-107-173.ip.linodeusercontent.com [45.33.107.173] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <yocto-status@lists.yoctoproject.org>; Tue, 31 Mar 2026 15:31:54 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/yocto-status/message/111
+ <yocto-status@lists.yoctoproject.org>; Tue, 31 Mar 2026 20:46:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/yocto-status/message/112
 
 
---=-uX3hrPDd/Y8MKvoW4LJr
+--=-2IQXJBb0O1n1crvMRhkm
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2026-03-31 at 07:50 -0700, Stephen Jolley via
-lists.yoctoproject.org wrote:
-> Current Dev Position: YP 6.0 M3
->=20
-> Next Deadline: YP 6.0 M3 Build Date 2026-03-23
->=20
-> Next Team Meetings:
->=20
->    -
->=20
->    Bug Triage meeting - Thursday 2nd Apr. 7:30am PDT (
->    https://zoom.us/j/454367603?pwd=3DZGxoa2ZXL3FkM3Y0bFd5aVpHVVZ6dz09)
->    -
->=20
->    Weekly Project Engineering Sync  - Tuesday 31st Mar. 8am PDT (
->    https://zoom.us/j/990892712?pwd=3DcHU1MjhoM2x6ck81bkcrYjRrcmJsUT09)
->    <https://zoom.us/j/990892712>
->    -
->=20
->    Yocto Project Patch Review - Thursday 2nd Apr. 10am GMT and Monday 6th
->    Apr. 9am PDT (https://zoom.us/j/9776239
->    <https://zoom.us/j/97762397148?pwd=3D1xkiC9hp9SjEonaTaONwTb6iWry4Eb.1>=
-7
->    148?pwd=3D1xk0iC9hp9SjEonaTaONwTb6iWry4Eb.1
->    <https://zoom.us/j/97762397148?pwd=3D1xkiC9hp9SjEonaTaONwTb6iWry4Eb.1>=
-)
+On Tue, 2026-03-31 at 15:58 -0400, Walt Miner via lists.yoctoproject.org
+wrote:
+> When will we see the plan for after June 5?
 
-Hi all,
+Hi Walt,
 
-Monday 6th April is a public holiday here in the UK so Ross, Richard and
-myself will all be out of office. So, there will be no patch review call
-on Monday!
+This is on me. I have provisional dates, I need to make sure they're ok
+then get them sent to the list. I've been focused on blocking issues for
+the 6.0 M3 build but should get to this later this week.
 
 Best regards,
 
@@ -173,17 +153,17 @@ Best regards,
 Paul Barker
 
 
---=-uX3hrPDd/Y8MKvoW4LJr
+--=-2IQXJBb0O1n1crvMRhkm
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part
 
 -----BEGIN PGP SIGNATURE-----
 
-iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCacvo4hEccGF1bEBwYmFy
-a2VyLmRldgAKCRCrY1Tsnbr0bmiDAP0cOc/qq+6WDlawUZktLBepS/9ciB8QgKb8
-YXB9b0YE3AEA1vrVisNh0MIdoooVwF9+eE3Cyw8WPQKBbGUsjT33hQA=
-=O24I
+iIcEABYKAC8WIQSzjPXf5Y1BDWhU2iCrY1Tsnbr0bgUCacwyjREccGF1bEBwYmFy
+a2VyLmRldgAKCRCrY1Tsnbr0bvy1AP9V5x35eW4sje7Sj1N4FbNMsEovnw16dKhJ
+f7zpYw/c+gEAs2FbWmE4tHBB3x5g9+yYAKUHJ9oFs9JyiqTRplJfEAg=
+=BicK
 -----END PGP SIGNATURE-----
 
---=-uX3hrPDd/Y8MKvoW4LJr--
+--=-2IQXJBb0O1n1crvMRhkm--
 
